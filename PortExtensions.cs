@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XmodemProtocol {
+namespace CSharpToolkit {
     public static class PortExtensions {
         /// <summary>
         /// Writes the specified byte to the port.
