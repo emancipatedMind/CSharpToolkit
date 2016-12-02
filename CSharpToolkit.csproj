@@ -33,6 +33,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,9 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BooleanNotConverter.cs" />
-    <Compile Include="EntityBase.cs" />
-    <Compile Include="PortExtensions.cs" />
+    <Compile Include="EventArgs\ActionEventArgs.cs" />
+    <Compile Include="Console\BarDrawerByPercentage.cs" />
+    <Compile Include="Console\ConsoleBarDrawer.cs" />
+    <Compile Include="Algorithms\PeriodicMethodInvoker.cs" />
+    <Compile Include="Factories\PeriodicMethodInvokerFactory.cs" />
+    <Compile Include="Algorithms\RunsLessThanSeed.cs" />
+    <Compile Include="Algorithms\SeedLessThanRuns.cs" />
+    <Compile Include="XAML\BooleanNotConverter.cs" />
+    <Compile Include="XAML\EntityBase.cs" />
+    <Compile Include="XAML\EnumBindingSourceExtension.cs" />
+    <Compile Include="XAML\EnumDescriptionTypeConverter.cs" />
+    <Compile Include="Extensions\PortExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
