@@ -3,14 +3,14 @@
     using EventArgs;
     using Algorithms;
 
-    class PeriodicMethodInvokerFactory {
+    public class PeriodicMethodInvokerFactory {
 
         readonly RunsLessThanSeed _runsLessThanSeed = new RunsLessThanSeed();
         readonly SeedLessThanRuns _seedLessThanRuns = new SeedLessThanRuns();
 
         public PeriodicMethodInvoker GetPeriodicMethodInvoker(double seed, double runsDesired) {
             PeriodicMethodInvoker _product;
-            if (seed < runsDesired) {
+            if (seed <= runsDesired) {
                 _product = _seedLessThanRuns;
             }
             else {

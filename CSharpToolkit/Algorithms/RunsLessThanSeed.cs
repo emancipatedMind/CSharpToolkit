@@ -1,7 +1,7 @@
 ﻿namespace CSharpToolkit.Algorithms {
     using EventArgs;
 
-    internal class RunsLessThanSeed : PeriodicMethodInvoker {
+    public class RunsLessThanSeed : PeriodicMethodInvoker {
 
         double _loop = 0;
 

@@ -2,7 +2,7 @@
     using System;
     using EventArgs;
 
-    internal abstract class PeriodicMethodInvoker {
+    public abstract class PeriodicMethodInvoker {
 
         public PeriodicMethodInvoker() {
             InitializeSeed();

@@ -1,7 +1,7 @@
 ﻿namespace CSharpToolkit.Algorithms {
     using EventArgs;
 
-    internal class SeedLessThanRuns : PeriodicMethodInvoker {
+    public class SeedLessThanRuns : PeriodicMethodInvoker {
 
         protected override void RunAlgorithm() {
             double limit =  _factor * _timesIterated;
