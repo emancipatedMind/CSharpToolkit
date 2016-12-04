@@ -6,6 +6,8 @@
 
         int _bars;
         int _barLength;
+        string _bar;
+        ConsoleColor _defaultColor;
 
         public ConsoleBarDrawer() { }
 
@@ -17,34 +19,48 @@
             _bars = Convert.ToInt32(bars);
             _barLength = Convert.ToInt32(barLength);
             ValidateBarLength();
-            bool last = _bars == _barLength;
-            int spaces = _barLength - _bars;
-            string bar = "[";
-            bar += new string('|', _bars); 
-            bar += new string(' ', spaces); 
-            bar += "]";
+            ValidateBars();
+            BuildBar();
             ClearCurrentConsoleLine();
-            var defaultColor = Console.ForegroundColor;
-            if (last) Console.ForegroundColor = CompletedColor;
+            SetColor();
+            Console.Write(_bar);
+            Console.ForegroundColor = _defaultColor;
+        }
+
+        private void SetColor() {
+            _defaultColor = Console.ForegroundColor;
+            if (BarFull) Console.ForegroundColor = CompletedColor;
             else if (ProcessingColors.Count != 0) {
                 int index = _bars % ProcessingColors.Count;
                 Console.ForegroundColor = ProcessingColors[index];
             }
-            Console.Write(bar);
-            Console.ForegroundColor = defaultColor;
+        }
+
+        private bool BarFull => _bars == _barLength;
+
+        private void BuildBar() {
+            int spaces = _barLength - _bars;
+            _bar = "[";
+            _bar += new string('|', _bars);
+            _bar += new string(' ', spaces);
+            _bar += "]";
         }
 
         private void ClearCurrentConsoleLine() {
             int currentLineCursor = Console.CursorTop;
             Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write(new string(' ', Console.WindowWidth)); 
+            Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, currentLineCursor);
         }
 
-        private void ValidateBarLength() {
+        private void ValidateBarLength() => ValidateLength(ref _barLength);
+
+        private void ValidateBars() => ValidateLength(ref _bars);
+
+        private void ValidateLength(ref int length) {
             int limit = Console.WindowWidth - 3;
-            if (_barLength > limit)
-                _barLength = limit;
+            if (length > limit)
+                length = limit;
         }
 
     }
