@@ -28,7 +28,7 @@
             get { return _seed; }
             set {
                 if (value < 1) value = 1.0;
-                else value = Math.Ceiling(value); 
+                else value = Math.Ceiling(value);
                 _seed = value;
                 Reset();
             }
@@ -37,8 +37,11 @@
         public double BarLength {
             get { return _barLength; }
             set {
+                int limit = Console.WindowWidth - 3;
                 if (value < 1) value = 1.0;
-                else value = Math.Ceiling(value); 
+                else if (value > limit)
+                    value = limit;
+                else value = Math.Ceiling(value);
                 _barLength = value;
                 Reset();
             }
@@ -54,7 +57,6 @@
 
         private void Configure() {
             _pmi = _factory.GetPeriodicMethodInvoker(Seed, BarLength);
-            _pmi.Reset();
             _firstCall = false;
         }
     }
