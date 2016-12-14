@@ -50,6 +50,8 @@
     <Compile Include="Algorithms\RunsLessThanSeed.cs" />
     <Compile Include="Algorithms\SeedLessThanRuns.cs" />
     <Compile Include="XAML\BooleanNotConverter.cs" />
+    <Compile Include="XAML\DelegateCommand.cs" />
+    <Compile Include="XAML\DelegateCommandTask.cs" />
     <Compile Include="XAML\EntityBase.cs" />
     <Compile Include="XAML\EnumBindingSourceExtension.cs" />
     <Compile Include="XAML\EnumDescriptionTypeConverter.cs" />
