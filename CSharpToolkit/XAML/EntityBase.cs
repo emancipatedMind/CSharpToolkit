@@ -1,4 +1,4 @@
-﻿namespace CSharpToolkit {
+﻿namespace CSharpToolkit.XAML {
     using System;
     using System.Collections;
     using System.Collections.Generic;
