@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using EventArgs;
 
     public abstract class EntityBase : INotifyDataErrorInfo, INotifyPropertyChanged {
         protected readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
@@ -50,5 +51,11 @@
         protected void OnPropertyChange([CallerMemberName] string propertyName = "" ) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); 
         }
+
+        public event EventHandler<NotificationEventArgs> Notify;
+        protected void FireNotifyEvent(NotificationEventArgs e) =>
+            Notify?.Invoke(this, e); 
+        protected void FireNotifyEvent(string notification) =>
+            Notify?.Invoke(this, new NotificationEventArgs(notification)); 
     }
 }
