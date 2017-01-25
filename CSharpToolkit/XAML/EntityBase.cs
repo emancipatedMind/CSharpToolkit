@@ -23,7 +23,7 @@
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
-        protected void ClearErrors(string propertyName = "") {
+        protected void ClearErrors([CallerMemberName] string propertyName = "") {
             _errors.Remove(propertyName);
             OnErrorsChanged(propertyName);
         }
