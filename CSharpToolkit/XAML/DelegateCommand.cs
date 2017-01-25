@@ -24,7 +24,14 @@ namespace CSharpToolkit.XAML {
         }
 
         #pragma warning disable 67
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged {
+            add {
+                CommandManager.RequerySuggested += value;
+            }
+            remove {
+                CommandManager.RequerySuggested -= value;
+            }
+        }
         #pragma warning restore 67
     }
 }
