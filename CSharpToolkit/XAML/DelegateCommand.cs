@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CSharpToolkit.XAML {
     public class DelegateCommand : ICommand {
-        protected readonly Action _command;
+        protected readonly Action<object> _command;
         protected Func<object, bool> _canExecuteMethod;
 
-        public DelegateCommand(Action action, Func<object, bool> canExecuteLogic = null) {
+        public DelegateCommand(Action<object> action, Func<object, bool> canExecuteLogic = null) {
             _command = action;
             _canExecuteMethod = canExecuteLogic;
         }
 
-        public virtual void Execute(object parameter) {
-            _command();
+        public virtual void Execute(object p) {
+            _command(p);
         }
 
         public bool CanExecute(object parameter) {
