@@ -53,6 +53,7 @@
     <Compile Include="Algorithms\RunsLessThanSeed.cs" />
     <Compile Include="Algorithms\SeedLessThanRuns.cs" />
     <Compile Include="XAML\BooleanNotConverter.cs" />
+    <Compile Include="XAML\ComparisonFunction.cs" />
     <Compile Include="XAML\DelegateCommand.cs" />
     <Compile Include="XAML\DelegateCommandTask.cs" />
     <Compile Include="XAML\EntityBase.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="XAML\EnumDescriptionTypeConverter.cs" />
     <Compile Include="Extensions\PortExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XAML\IntToBool.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="XAML\Resources.xaml">
