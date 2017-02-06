@@ -7,7 +7,7 @@
     using System.Runtime.CompilerServices;
     using EventArgs;
 
-    public abstract class EntityBase : INotifyDataErrorInfo, INotifyPropertyChanged {
+    public abstract class EntityBase : INotifyDataErrorInfo, INotifyPropertyChanged, IDataErrorInfo {
         protected readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
 
         public IEnumerable GetErrors(string propertyName) {
@@ -17,6 +17,7 @@
         }
 
         public bool HasErrors => _errors.Count != 0;
+
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
         protected void OnErrorsChanged(string propertyName) {
@@ -56,6 +57,9 @@
         protected void FireNotifyEvent(NotificationEventArgs e) =>
             Notify?.Invoke(this, e); 
         protected void FireNotifyEvent(string notification) =>
-            Notify?.Invoke(this, new NotificationEventArgs(notification)); 
+            Notify?.Invoke(this, new NotificationEventArgs(notification));
+
+        public virtual string Error { get; }
+        public abstract string this[string columnName] { get; }
     }
 }
