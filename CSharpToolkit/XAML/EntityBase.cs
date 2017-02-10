@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.ComponentModel.DataAnnotations;
     using EventArgs;
 
     public abstract class EntityBase : INotifyDataErrorInfo, INotifyPropertyChanged, IDataErrorInfo {
@@ -46,20 +47,27 @@
             });
             if (changed)
                 OnErrorsChanged(propertyName);
-        }  
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChange([CallerMemberName] string propertyName = "" ) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); 
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public event EventHandler<NotificationEventArgs> Notify;
         protected void FireNotifyEvent(NotificationEventArgs e) =>
-            Notify?.Invoke(this, e); 
+            Notify?.Invoke(this, e);
         protected void FireNotifyEvent(string notification) =>
             Notify?.Invoke(this, new NotificationEventArgs(notification));
 
         public virtual string Error { get; }
         public abstract string this[string columnName] { get; }
+
+        protected string[] GetErrorsFromAnnotations<T>(string propertyName, T value) {
+            var results = new List<ValidationResult>();
+            var vc = new ValidationContext(this, null, null) { MemberName = propertyName };
+            var isValid = Validator.TryValidateProperty(value, vc, results);
+            return isValid ? null : Array.ConvertAll(results.ToArray(), o => o.ErrorMessage);
+        }
     }
 }
