@@ -9,7 +9,7 @@
     using EventArgs;
 
     public abstract class EntityBase : INotifyDataErrorInfo, INotifyPropertyChanged, IDataErrorInfo {
-        protected readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
 
         public IEnumerable GetErrors(string propertyName) {
             if (string.IsNullOrEmpty(propertyName))
@@ -26,8 +26,10 @@
         }
 
         protected void ClearErrors([CallerMemberName] string propertyName = "") {
+            bool fireEvent = HasErrors;
             _errors.Remove(propertyName);
             OnErrorsChanged(propertyName);
+            if (fireEvent) OnPropertyChange(nameof(HasErrors));
         }
 
         protected void AddError(string propertyName, string error) {
@@ -35,6 +37,7 @@
         }
 
         protected void AddErrors(string propertyName, IList<string> errors) {
+            bool fireEvent = HasErrors == false;
             bool changed = false;
             if (!_errors.ContainsKey(propertyName)) {
                 _errors.Add(propertyName, new List<string>());
@@ -45,8 +48,10 @@
                 _errors[propertyName].Add(x);
                 changed = true;
             });
-            if (changed)
+            if (changed) {
                 OnErrorsChanged(propertyName);
+                if (fireEvent) OnPropertyChange(nameof(HasErrors));
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
