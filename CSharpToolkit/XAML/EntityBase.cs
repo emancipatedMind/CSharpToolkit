@@ -29,7 +29,7 @@
             bool fireEvent = HasErrors;
             _errors.Remove(propertyName);
             OnErrorsChanged(propertyName);
-            if (fireEvent) OnPropertyChange(nameof(HasErrors));
+            if (fireEvent) OnPropertyChanged(nameof(HasErrors));
         }
 
         protected void AddError(string propertyName, string error) {
@@ -50,12 +50,12 @@
             });
             if (changed) {
                 OnErrorsChanged(propertyName);
-                if (fireEvent) OnPropertyChange(nameof(HasErrors));
+                if (fireEvent) OnPropertyChanged(nameof(HasErrors));
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChange([CallerMemberName] string propertyName = "" ) {
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "" ) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
