@@ -25,7 +25,7 @@
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
-        protected void ClearErrors([CallerMemberName] string propertyName = "") {
+        protected void ClearErrors(string propertyName = "") {
             bool fireEvent = HasErrors;
             _errors.Remove(propertyName);
             OnErrorsChanged(propertyName);
