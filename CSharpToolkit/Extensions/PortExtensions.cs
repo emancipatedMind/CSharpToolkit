@@ -44,7 +44,7 @@
                 int bytesToRead = p.BytesToRead;
                 byteArray = new byte[bytesToRead];
                 p.Read(byteArray, 0, bytesToRead);
-                byteList.AddRange(byteArray); 
+                byteList.AddRange(byteArray);
             } while (p.BytesToRead > 0);
             return byteList;
         }

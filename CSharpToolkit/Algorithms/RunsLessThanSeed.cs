@@ -7,7 +7,7 @@
 
         protected override void RunAlgorithm() {
             if (_timesIterated >= _loop) {
-                FireActionEvent(new ActionEventArgs(_runs)); 
+                FireActionEvent(new ActionEventArgs(_runs));
                 _loop = _factor * ++_runs;
             }
         }

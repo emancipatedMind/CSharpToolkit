@@ -16,7 +16,7 @@ namespace CSharpToolkit.XAML {
         }
 
         public bool CanExecute(object parameter) {
-            return _canExecuteMethod?.Invoke(parameter) ?? true; 
+            return _canExecuteMethod?.Invoke(parameter) ?? true;
         }
 
         #pragma warning disable 67

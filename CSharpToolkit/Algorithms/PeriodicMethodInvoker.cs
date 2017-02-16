@@ -21,7 +21,7 @@
         public double Seed {
             get { return _seed; }
             set {
-                if (value < 1) value = 1; 
+                if (value < 1) value = 1;
                 _seed = value;
                 CalculateFactor();
             }
@@ -30,7 +30,7 @@
         public double RunsDesired {
             get { return _runsDesired; }
             set {
-                if (value < 1) value = 1; 
+                if (value < 1) value = 1;
                 _runsDesired = value;
                 CalculateFactor();
             }
@@ -39,7 +39,7 @@
         public void Iterate() {
             _timesIterated++;
             RunAlgorithm();
-            if (_runs > RunsDesired) Reset(); 
+            if (_runs > RunsDesired) Reset();
         }
 
         public virtual void Reset() {

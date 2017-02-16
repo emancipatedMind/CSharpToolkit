@@ -66,7 +66,7 @@
             Notify?.Invoke(this, new NotificationEventArgs(notification));
 
         public virtual string Error { get; }
-        public virtual string this[string columnName] => ""; 
+        public virtual string this[string columnName] => "";
 
         protected string[] GetErrorsFromAnnotations<T>(string propertyName, T value) {
             var results = new List<ValidationResult>();

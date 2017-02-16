@@ -20,7 +20,7 @@
             _product.RunsDesired = runsDesired;
             _product.Reset();
             return _product;
-        } 
+        }
 
         public EventHandler<ActionEventArgs> SetAction {
             set {

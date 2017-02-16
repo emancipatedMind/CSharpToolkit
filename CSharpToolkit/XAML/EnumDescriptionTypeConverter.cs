@@ -8,7 +8,7 @@
         public EnumDescriptionTypeConverter(Type type) : base(type) { }
 
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType) {
-            if (destinationType != typeof(string)) 
+            if (destinationType != typeof(string))
                 return base.ConvertTo(context, culture, value, destinationType);
 
             if (value != null) {
