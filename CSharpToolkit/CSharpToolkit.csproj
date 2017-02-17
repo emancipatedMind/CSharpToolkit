@@ -50,6 +50,7 @@
     <Compile Include="Console\ConsoleBarDrawer.cs" />
     <Compile Include="Algorithms\PeriodicMethodInvoker.cs" />
     <Compile Include="EventArgs\NotificationEventArgs.cs" />
+    <Compile Include="Exceptions\InternalException.cs" />
     <Compile Include="Factories\PeriodicMethodInvokerFactory.cs" />
     <Compile Include="Algorithms\RunsLessThanSeed.cs" />
     <Compile Include="Algorithms\SeedLessThanRuns.cs" />
