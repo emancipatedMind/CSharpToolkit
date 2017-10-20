@@ -45,10 +45,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\BoyerMoore.cs" />
     <Compile Include="EventArgs\ActionEventArgs.cs" />
     <Compile Include="Console\BarDrawerByPercentage.cs" />
     <Compile Include="Console\ConsoleBarDrawer.cs" />
     <Compile Include="Algorithms\PeriodicMethodInvoker.cs" />
+    <Compile Include="EventArgs\GenericEventArgs.cs" />
     <Compile Include="EventArgs\NotificationEventArgs.cs" />
     <Compile Include="Exceptions\InternalException.cs" />
     <Compile Include="Factories\PeriodicMethodInvokerFactory.cs" />
