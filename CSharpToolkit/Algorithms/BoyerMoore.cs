@@ -5,7 +5,7 @@
 
         public int IndexOf(byte[] haystack, byte[] needle) {
 
-            if (needle.Length == 0)
+            if (needle.Length == 0) 
                 return 0;
 
             int[] charTable = MakeCharTable(needle);

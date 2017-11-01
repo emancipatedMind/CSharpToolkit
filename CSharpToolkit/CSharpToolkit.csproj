@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,8 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CSharpToolkit</RootNamespace>
     <AssemblyName>CSharpToolkit</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -35,6 +41,10 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,34 +56,55 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\BoyerMoore.cs" />
-    <Compile Include="EventArgs\ActionEventArgs.cs" />
-    <Compile Include="Console\BarDrawerByPercentage.cs" />
-    <Compile Include="Console\ConsoleBarDrawer.cs" />
     <Compile Include="Algorithms\PeriodicMethodInvoker.cs" />
-    <Compile Include="EventArgs\GenericEventArgs.cs" />
-    <Compile Include="EventArgs\NotificationEventArgs.cs" />
-    <Compile Include="Exceptions\InternalException.cs" />
-    <Compile Include="Factories\PeriodicMethodInvokerFactory.cs" />
     <Compile Include="Algorithms\RunsLessThanSeed.cs" />
     <Compile Include="Algorithms\SeedLessThanRuns.cs" />
+    <Compile Include="Algorithms\SequenceChecker.cs" />
+    <Compile Include="Algorithms\SequenceSeeker.cs" />
+    <Compile Include="Common\Get.cs" />
+    <Compile Include="Common\OperationResult.cs" />
+    <Compile Include="Common\Operations.cs" />
+    <Compile Include="Common\Use.cs" />
+    <Compile Include="Console\Menu.cs" />
+    <Compile Include="Diagnostics\RandomDataGenerator.cs" />
+    <Compile Include="Diagnostics\ReflectionServices.cs" />
+    <Compile Include="Console\BarDrawerByPercentage.cs" />
+    <Compile Include="Console\ConsoleBarDrawer.cs" />
+    <Compile Include="EventArgs\ActionEventArgs.cs" />
+    <Compile Include="EventArgs\DataCollectionEventArgs.cs" />
+    <Compile Include="EventArgs\GenericCollectionEventArgs.cs" />
+    <Compile Include="EventArgs\GenericEventArgs.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Factories\PeriodicMethodInvokerFactory.cs" />
+    <Compile Include="Geometry\AngleConversions.cs" />
+    <Compile Include="Geometry\ThreeDLineSegment.cs" />
+    <Compile Include="Geometry\ThreeDPoint.cs" />
+    <Compile Include="Geometry\TwoDLineSegment.cs" />
+    <Compile Include="Geometry\TwoDPoint.cs" />
+    <Compile Include="XAML\AwaitableDelegateCommand.cs" />
     <Compile Include="XAML\BooleanNotConverter.cs" />
-    <Compile Include="XAML\ComparisonFunction.cs" />
+    <Compile Include="XAML\CommandExtensions.cs" />
+    <Compile Include="XAML\CustomCollection.cs" />
     <Compile Include="XAML\DelegateCommand.cs" />
-    <Compile Include="XAML\DelegateCommandTask.cs" />
     <Compile Include="XAML\EntityBase.cs" />
     <Compile Include="XAML\EnumBindingSourceExtension.cs" />
     <Compile Include="XAML\EnumDescriptionTypeConverter.cs" />
-    <Compile Include="Extensions\PortExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XAML\IntToBool.cs" />
+    <Compile Include="XAML\IAsyncCommand.cs" />
+    <Compile Include="XAML\IRaiseCanExecuteChanged.cs" />
+    <Compile Include="XAML\IsNullConverter.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Page Include="XAML\Resources.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -59,11 +59,11 @@
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public event EventHandler<NotificationEventArgs> Notify;
-        protected void FireNotifyEvent(NotificationEventArgs e) =>
+        public event EventHandler<GenericEventArgs<string>> Notify;
+        protected void FireNotifyEvent(GenericEventArgs<string> e) =>
             Notify?.Invoke(this, e);
         protected void FireNotifyEvent(string notification) =>
-            Notify?.Invoke(this, new NotificationEventArgs(notification));
+            Notify?.Invoke(this, new GenericEventArgs<string>(notification));
 
         public virtual string Error { get; }
         public virtual string this[string columnName] => "";

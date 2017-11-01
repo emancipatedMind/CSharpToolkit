@@ -1,25 +1,27 @@
-﻿using System;
-using System.Windows.Input;
+﻿namespace CSharpToolkit.XAML {
+    using System;
+    using System.Windows.Input;
+    public class DelegateCommand : DelegateCommand<object> {
+        public DelegateCommand(Action executeMethod) : base(_ => executeMethod(), null) { }
 
-namespace CSharpToolkit.XAML {
-    public class DelegateCommand : ICommand {
-        protected readonly Action<object> _command;
-        protected Func<object, bool> _canExecuteMethod;
+        public DelegateCommand(Action executeMethod, Func<bool> canExecuteMethod) : base(_ => executeMethod(), _ => canExecuteMethod()) { }
+    }
 
-        public DelegateCommand(Action<object> action, Func<object, bool> canExecuteLogic = null) {
-            _command = action;
-            _canExecuteMethod = canExecuteLogic;
+    public class DelegateCommand<T> : ICommand, IRaiseCanExecuteChanged {
+        private readonly Func<T, bool> _canExecuteMethod;
+        private readonly Action<T> _executeMethod;
+        private bool _isExecuting;
+
+        public DelegateCommand(Action<T> executeMethod) : this(executeMethod, null) { }
+
+        public DelegateCommand(Action<T> executeMethod, Func<T, bool> canExecuteMethod) {
+            if ((executeMethod == null) && (canExecuteMethod == null)) {
+                throw new ArgumentNullException("executeMethod", @"Execute Method cannot be null");
+            }
+            _executeMethod = executeMethod;
+            _canExecuteMethod = canExecuteMethod;
         }
 
-        public virtual void Execute(object p) {
-            _command(p);
-        }
-
-        public bool CanExecute(object parameter) {
-            return _canExecuteMethod?.Invoke(parameter) ?? true;
-        }
-
-        #pragma warning disable 67
         public event EventHandler CanExecuteChanged {
             add {
                 CommandManager.RequerySuggested += value;
@@ -28,6 +30,37 @@ namespace CSharpToolkit.XAML {
                 CommandManager.RequerySuggested -= value;
             }
         }
-        #pragma warning restore 67
+
+        public void RaiseCanExecuteChanged() {
+            CommandManager.InvalidateRequerySuggested();
+        }
+
+        bool ICommand.CanExecute(object parameter) {
+            return !_isExecuting && CanExecute((T)parameter);
+        }
+
+        void ICommand.Execute(object parameter) {
+            _isExecuting = true;
+            try {
+                RaiseCanExecuteChanged();
+                Execute((T)parameter);
+            }
+            finally {
+                _isExecuting = false;
+                RaiseCanExecuteChanged();
+            }
+        }
+
+        public bool CanExecute(T parameter) {
+            if (_canExecuteMethod == null)
+                return true;
+
+            return _canExecuteMethod(parameter);
+        }
+
+        public void Execute(T parameter) {
+            _executeMethod(parameter);
+        }
+
     }
 }
