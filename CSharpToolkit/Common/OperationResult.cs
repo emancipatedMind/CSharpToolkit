@@ -4,48 +4,34 @@
     using System.Linq;
     public class OperationResult<T> {
 
-        public OperationResult(IEnumerable<Exception> exceptions) : this(false, exceptions) { }
-        public OperationResult(bool successful, IEnumerable<Exception> exceptions = null) {
-            Successful = successful;
-            Exceptions = exceptions?.ToArray() ?? new Exception[0];
-        }
-
         public OperationResult(T result) : this(true, result) { }
-        public OperationResult(bool successful, T result) : this(successful, result, null) { }
-        public OperationResult(bool successful, T result, IEnumerable<Exception> exceptions) {
+        public OperationResult(IEnumerable<Exception> exceptions) : this(false, default(T), exceptions) { }
+        public OperationResult(bool wasSuccessful, T result) : this(wasSuccessful, result, null) { }
+        public OperationResult(bool wasSuccessful, T result, IEnumerable<Exception> exceptions) {
             Result = result;
-            Successful = successful;
+            WasSuccessful = wasSuccessful;
             Exceptions = exceptions?.ToArray() ?? new Exception[0];
         }
 
-        public bool Successful { get; }
+        public bool HadErrors => Exceptions.Any();
+        public bool WasSuccessful { get; }
         public Exception[] Exceptions { get; }
         public T Result { get; }
     }
 
     public class OperationResult {
 
-        public OperationResult(IEnumerable<Exception> exceptions) {
-            Successful = false;
+        public OperationResult() : this (true, new Exception[0]) { }
+        public OperationResult(bool wasSuccesful) : this (wasSuccesful, new Exception[0]) { }
+        public OperationResult(IEnumerable<Exception> exceptions) : this(false, exceptions)  { }
+        public OperationResult(OperationResult result) : this(result.WasSuccessful, result.Exceptions) { }
+        public OperationResult(bool wasSuccessful, IEnumerable<Exception> exceptions) {
+            WasSuccessful = wasSuccessful;
             Exceptions = exceptions?.ToArray() ?? new Exception[0];
         }
 
-        public OperationResult(bool successful, IEnumerable<Exception> exceptions = null) {
-            Successful = successful;
-            Exceptions = exceptions?.ToArray() ?? new Exception[0];
-        }
-
-        public OperationResult() {
-            Successful = true;
-            Exceptions = new Exception[0];
-        }
-
-        public OperationResult(OperationResult result) {
-            Successful = result.Successful;
-            Exceptions = result.Exceptions;
-        }
-
-        public bool Successful { get; }
+        public bool WasSuccessful { get; }
+        public bool HadErrors => Exceptions.Any();
         public Exception[] Exceptions { get; }
 
     }
