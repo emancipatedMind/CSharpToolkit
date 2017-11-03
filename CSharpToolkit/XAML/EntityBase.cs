@@ -1,4 +1,6 @@
 ﻿namespace CSharpToolkit.XAML {
+    using Abstractions;
+    using EventArgs;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -6,9 +8,8 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.ComponentModel.DataAnnotations;
-    using EventArgs;
 
-    public abstract class EntityBase : INotifyDataErrorInfo, INotifyPropertyChanged, IDataErrorInfo {
+    public abstract class EntityBase : IEntityBase {
         private readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
 
         public IEnumerable GetErrors(string propertyName) {
