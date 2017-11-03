@@ -1,4 +1,4 @@
-﻿namespace CSharpToolkit.Common {
+﻿namespace CSharpToolkit.Utilities {
     using System;
     using System.Collections.Generic;
     using System.Linq;

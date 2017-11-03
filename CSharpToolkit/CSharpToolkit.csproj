@@ -62,10 +62,9 @@
     <Compile Include="Algorithms\SeedLessThanRuns.cs" />
     <Compile Include="Algorithms\SequenceChecker.cs" />
     <Compile Include="Algorithms\SequenceSeeker.cs" />
-    <Compile Include="Common\Get.cs" />
-    <Compile Include="Common\OperationResult.cs" />
-    <Compile Include="Common\Operations.cs" />
-    <Compile Include="Common\Use.cs" />
+    <Compile Include="Utilities\Get.cs" />
+    <Compile Include="Utilities\OperationResult.cs" />
+    <Compile Include="Utilities\Use.cs" />
     <Compile Include="Console\Menu.cs" />
     <Compile Include="Diagnostics\RandomDataGenerator.cs" />
     <Compile Include="Diagnostics\ReflectionServices.cs" />
