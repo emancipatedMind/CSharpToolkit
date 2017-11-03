@@ -81,6 +81,7 @@
     <Compile Include="Geometry\ThreeDPoint.cs" />
     <Compile Include="Geometry\TwoDLineSegment.cs" />
     <Compile Include="Geometry\TwoDPoint.cs" />
+    <Compile Include="Utilities\Operations.cs" />
     <Compile Include="XAML\AwaitableDelegateCommand.cs" />
     <Compile Include="XAML\BooleanNotConverter.cs" />
     <Compile Include="XAML\CommandExtensions.cs" />
