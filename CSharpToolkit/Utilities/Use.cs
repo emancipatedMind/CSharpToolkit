@@ -11,5 +11,10 @@
         public static void List<T>(Action<List<T>> action) =>
             Get.General(action);
 
+        public static void DisposableObject<T>(Action<T> method) where T : IDisposable, new() {
+            using (var context = Activator.CreateInstance<T>())
+                method(context);
+        }
+
     }
 }
