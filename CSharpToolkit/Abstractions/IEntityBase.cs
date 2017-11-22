@@ -1,5 +1,5 @@
 ﻿namespace CSharpToolkit.Abstractions {
     using System.ComponentModel;
-    public interface IEntityBase : IStringNotification, INotifyDataErrorInfo, INotifyPropertyChanged, IDataErrorInfo {
+    public interface IEntityBase : IUserNotifier, INotifyDataErrorInfo, INotifyPropertyChanged, IDataErrorInfo {
     }
 }

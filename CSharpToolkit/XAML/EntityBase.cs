@@ -20,7 +20,6 @@
 
         public bool HasErrors => _errors.Count != 0;
 
-
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
         protected void OnErrorsChanged(string propertyName) {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
@@ -60,11 +59,11 @@
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public event EventHandler<GenericEventArgs<string>> Notify;
-        protected void FireNotifyEvent(GenericEventArgs<string> e) =>
+        public event EventHandler<GenericEventArgs<string, Urgency>> Notify;
+        protected void FireNotifyEvent(GenericEventArgs<string, Urgency> e) =>
             Notify?.Invoke(this, e);
-        protected void FireNotifyEvent(string notification) =>
-            Notify?.Invoke(this, new GenericEventArgs<string>(notification));
+        protected void FireNotifyEvent(string notification, Urgency urgency) =>
+            Notify?.Invoke(this, new GenericEventArgs<string, Urgency>(notification, urgency));
 
         public virtual string Error { get; }
         public virtual string this[string columnName] => "";

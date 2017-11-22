@@ -55,7 +55,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstractions\IStringNotification.cs" />
+    <Compile Include="Abstractions\IUserNotifier.cs" />
+    <Compile Include="Abstractions\Urgency.cs" />
     <Compile Include="Algorithms\BoyerMoore.cs" />
     <Compile Include="Algorithms\PeriodicMethodInvoker.cs" />
     <Compile Include="Algorithms\RunsLessThanSeed.cs" />

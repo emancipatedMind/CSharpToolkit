@@ -5,10 +5,22 @@
     using System.Linq;
     public static class Get {
 
-        public static OperationResult<T> EnumValue<T>(object v) where T : struct =>
-            typeof(T).IsEnum ?
-                new OperationResult<T>(Enum.IsDefined(typeof(T), v), (T)v) :
-                new OperationResult<T>(new Exception[] { new NotSupportedException("Type must be System.Enum.") });
+        /*
+        public static OperationResult<T> EnumValue<T>(object v) {
+            try {
+                if (Enum.IsDefined(typeof(T), v)) {
+                    if (v.GetType() == typeof(string))
+                        return new OperationResult<T>((T)Enum.Parse(typeof(T), v.ToString(), true));
+
+                    return new OperationResult<T>((T)v);
+                }
+                return new OperationResult<T>(false, default(T));
+            }
+            catch (Exception ex) {
+                return new OperationResult<T>(new[] { ex });
+            }
+        }
+        */
 
         public static List<T> List<T>(Action<List<T>> action) =>
             General(action);

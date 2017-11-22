@@ -4,6 +4,14 @@
     using System.Runtime.InteropServices;
     using System.Security;
     public static class Operations {
+
+        public static int? DecodeInt(string intString) {
+            int n;
+            if (int.TryParse(intString, out n))
+                return n;
+            return null;
+        } 
+
         public static OperationResult<string> DecodeSecureString(SecureString value) {
             IntPtr valuePtr = IntPtr.Zero;
             try {
