@@ -55,7 +55,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstractions\DataAccess\ICachedTable.cs" />
     <Compile Include="Abstractions\DataAccess\ICachedTableProvider.cs" />
     <Compile Include="Abstractions\DataAccess\IConnectedDataAccessor.cs" />
     <Compile Include="Abstractions\DataAccess\IDataReaderAccessor.cs" />
