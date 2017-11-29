@@ -60,6 +60,7 @@
     <Compile Include="Abstractions\DataAccess\IDataReaderAccessor.cs" />
     <Compile Include="Abstractions\DataAccess\IDisconnectedDataAccessor.cs" />
     <Compile Include="Abstractions\IUserNotifier.cs" />
+    <Compile Include="Abstractions\Logging\IDurationLogger.cs" />
     <Compile Include="Abstractions\Logging\IExceptionFormatter.cs" />
     <Compile Include="Abstractions\Logging\IExceptionLogger.cs" />
     <Compile Include="Abstractions\Logging\IFileNameSwappable.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Logging\ExceptionFormatter.cs" />
     <Compile Include="Logging\ExceptionLogger.cs" />
     <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\DurationLogger.cs" />
     <Compile Include="Logging\TimeStampLogger.cs" />
     <Compile Include="Utilities\Get.cs" />
     <Compile Include="Utilities\OperationResult.cs" />
