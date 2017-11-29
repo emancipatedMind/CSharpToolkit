@@ -56,6 +56,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstractions\IUserNotifier.cs" />
+    <Compile Include="Abstractions\Logging\IExceptionFormatter.cs" />
+    <Compile Include="Abstractions\Logging\IExceptionLogger.cs" />
+    <Compile Include="Abstractions\Logging\IFileNameSwappable.cs" />
+    <Compile Include="Abstractions\Logging\IFileNameSwappableLogger.cs" />
+    <Compile Include="Abstractions\Logging\ILoggable.cs" />
+    <Compile Include="Abstractions\Logging\ILogger.cs" />
+    <Compile Include="Abstractions\Logging\ITimeStampLogger.cs" />
     <Compile Include="Abstractions\Urgency.cs" />
     <Compile Include="Algorithms\BoyerMoore.cs" />
     <Compile Include="Algorithms\PeriodicMethodInvoker.cs" />
@@ -63,6 +70,10 @@
     <Compile Include="Algorithms\SeedLessThanRuns.cs" />
     <Compile Include="Algorithms\SequenceChecker.cs" />
     <Compile Include="Algorithms\SequenceSeeker.cs" />
+    <Compile Include="Logging\ExceptionFormatter.cs" />
+    <Compile Include="Logging\ExceptionLogger.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\TimeStampLogger.cs" />
     <Compile Include="Utilities\Get.cs" />
     <Compile Include="Utilities\OperationResult.cs" />
     <Compile Include="Utilities\Use.cs" />
