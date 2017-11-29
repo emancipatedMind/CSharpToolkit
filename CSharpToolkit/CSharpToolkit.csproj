@@ -55,6 +55,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\DataAccess\ICachedTable.cs" />
+    <Compile Include="Abstractions\DataAccess\ICachedTableProvider.cs" />
+    <Compile Include="Abstractions\DataAccess\IConnectedDataAccessor.cs" />
+    <Compile Include="Abstractions\DataAccess\IDataReaderAccessor.cs" />
+    <Compile Include="Abstractions\DataAccess\IDisconnectedDataAccessor.cs" />
     <Compile Include="Abstractions\IUserNotifier.cs" />
     <Compile Include="Abstractions\Logging\IExceptionFormatter.cs" />
     <Compile Include="Abstractions\Logging\IExceptionLogger.cs" />
@@ -70,6 +75,12 @@
     <Compile Include="Algorithms\SeedLessThanRuns.cs" />
     <Compile Include="Algorithms\SequenceChecker.cs" />
     <Compile Include="Algorithms\SequenceSeeker.cs" />
+    <Compile Include="DataAccess\CachedTableProvider.cs" />
+    <Compile Include="DataAccess\DisconnectedDataReaderAccessor.cs" />
+    <Compile Include="DataAccess\Error\DataReader.cs" />
+    <Compile Include="DataAccess\Error\HandlingDataAccessor.cs" />
+    <Compile Include="DataAccess\LoggingDataAccessorDecorator.cs" />
+    <Compile Include="DataAccess\SQL\ConnectedDataReaderAccessor.cs" />
     <Compile Include="Logging\ExceptionFormatter.cs" />
     <Compile Include="Logging\ExceptionLogger.cs" />
     <Compile Include="Logging\Logger.cs" />
