@@ -12,7 +12,7 @@
 
         public void UseDataReader(string sql, Action<IDataReader> callback) {
             var table = new DataTable();
-            _dataAccessor.UseDataReader(sql, reader => table.Load(reader));
+            _dataAccessor.UseDataReader(sql, table.Load);
             callback(table.CreateDataReader());
         }
     }

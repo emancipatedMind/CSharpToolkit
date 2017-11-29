@@ -6,7 +6,7 @@
 
         public CachedTableProvider(string selectString, IDataReaderAccessor dataAccessor) {
             Table = new DataTable();
-            dataAccessor.UseDataReader(selectString, reader => Table.Load(reader));
+            dataAccessor.UseDataReader(selectString, Table.Load);
         }
 
         public DataTable Table { get; }
