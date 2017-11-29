@@ -56,9 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstractions\DataAccess\ICachedTableProvider.cs" />
-    <Compile Include="Abstractions\DataAccess\IConnectedDataAccessor.cs" />
     <Compile Include="Abstractions\DataAccess\IDataReaderAccessor.cs" />
-    <Compile Include="Abstractions\DataAccess\IDisconnectedDataAccessor.cs" />
     <Compile Include="Abstractions\IUserNotifier.cs" />
     <Compile Include="Abstractions\Logging\IDurationLogger.cs" />
     <Compile Include="Abstractions\Logging\IExceptionFormatter.cs" />
