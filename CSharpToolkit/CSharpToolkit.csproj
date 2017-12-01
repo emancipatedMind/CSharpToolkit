@@ -77,7 +77,7 @@
     <Compile Include="DataAccess\DisconnectedDataReaderAccessor.cs" />
     <Compile Include="DataAccess\Error\DataReader.cs" />
     <Compile Include="DataAccess\Error\HandlingDataAccessor.cs" />
-    <Compile Include="DataAccess\LoggingDataAccessorDecorator.cs" />
+    <Compile Include="DataAccess\LoggingDataAccessor.cs" />
     <Compile Include="DataAccess\SQL\ConnectedDataReaderAccessor.cs" />
     <Compile Include="Logging\ExceptionFormatter.cs" />
     <Compile Include="Logging\ExceptionLogger.cs" />
