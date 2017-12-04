@@ -79,11 +79,15 @@
     <Compile Include="DataAccess\Error\HandlingDataAccessor.cs" />
     <Compile Include="DataAccess\LoggingDataAccessor.cs" />
     <Compile Include="DataAccess\SQL\ConnectedDataReaderAccessor.cs" />
+    <Compile Include="DataAccess\Test\DataReaderStub.cs" />
+    <Compile Include="DataAccess\ThreadLockDataAccessor.cs" />
     <Compile Include="Logging\ExceptionFormatter.cs" />
     <Compile Include="Logging\ExceptionLogger.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\DurationLogger.cs" />
     <Compile Include="Logging\TimeStampLogger.cs" />
+    <Compile Include="DataAccess\Null\DataReaderAccessor.cs" />
+    <Compile Include="DataAccess\Test\DataReaderAccessorStub.cs" />
     <Compile Include="Utilities\Get.cs" />
     <Compile Include="Utilities\OperationResult.cs" />
     <Compile Include="Utilities\Use.cs" />
