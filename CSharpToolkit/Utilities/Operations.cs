@@ -1,5 +1,6 @@
 ﻿namespace CSharpToolkit.Utilities {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Security;
@@ -10,7 +11,7 @@
             if (int.TryParse(intString, out n))
                 return n;
             return null;
-        } 
+        }
 
         public static OperationResult<string> DecodeSecureString(SecureString value) {
             IntPtr valuePtr = IntPtr.Zero;
@@ -28,9 +29,6 @@
         }
 
         public static OperationResult PerformReplaceIfDifferent<T>(ref T oldValue, T newValue, T defaultValue = default(T)) {
-            if (oldValue == null)
-                return new OperationResult(false);
-
             if (newValue == null) {
                 if (defaultValue == null)
                     return new OperationResult(false);
@@ -38,7 +36,7 @@
                     newValue = defaultValue;
             }
 
-            if (oldValue.Equals(newValue))
+            if (oldValue?.Equals(newValue) == true)
                 return new OperationResult(false);
 
             oldValue = newValue;
@@ -63,6 +61,22 @@
 
         public static Action<string> GetWriteMethod(FileInfo file) =>
             s => { using (var stream = file.AppendText()) stream.Write(s); };
+
+        public static List<int> ChangeBase(int number, int newBase, bool isBigEndian = false) =>
+            Get.General<List<int>>(digits => {
+
+                while (number >= newBase) {
+                    int digit = number % newBase;
+                    AddDigit(digit);
+                    number = number / newBase;
+                }
+                AddDigit(number);
+
+                void AddDigit(int digit) {
+                    if (isBigEndian) digits.Insert(0, digit);
+                    else digits.Add(digit);
+                }
+            });
 
     }
 }
