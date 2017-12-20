@@ -1,8 +1,7 @@
 ﻿namespace CSharpToolkit.Utilities {
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
-    using System.Linq;
+    using System.IO;
     public static class Get {
 
         /*
@@ -21,6 +20,12 @@
             }
         }
         */
+        public static Action<string> WriteMethod(string fileName) =>
+            WriteMethod(new FileInfo(fileName));
+
+        public static Action<string> WriteMethod(FileInfo file) =>
+            s => { using (var stream = file.AppendText()) stream.Write(s); };
+
 
         public static List<T> List<T>(Action<List<T>> action) =>
             General(action);

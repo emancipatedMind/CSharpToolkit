@@ -14,7 +14,7 @@
                 .ToList()
                 .ForEach(c => secureString.AppendChar(c));
 
-            var result = Operations.DecodeSecureString(secureString);
+            var result = Decode.SecureString(secureString);
             string actual = result.Result;
 
             Assert.IsTrue(result.WasSuccessful);
@@ -26,7 +26,7 @@
             int oldValue = 5;
             int newValue = 6;
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
 
             Assert.IsTrue(result.WasSuccessful);
         }
@@ -36,7 +36,7 @@
             int expected = 6;
             int newValue = expected;
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
 
             Assert.AreEqual(expected, oldValue);
         }
@@ -46,7 +46,7 @@
             object expected = new object();
             object newValue = expected;
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
 
             Assert.AreSame(expected, oldValue);
         }
@@ -56,7 +56,7 @@
             int expected = 5;
             int newValue = expected;
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
 
             Assert.AreEqual(expected, oldValue);
         }
@@ -66,7 +66,7 @@
             object oldValue = expected;
             object newValue = expected;
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
 
             Assert.AreSame(expected, oldValue);
         }
@@ -75,7 +75,7 @@
             object oldValue = new object();
             object newValue = new object();
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
 
             Assert.IsTrue(result.WasSuccessful);
         }
@@ -84,7 +84,7 @@
             object oldValue = new object();
             object defaultValue = oldValue;
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, null, defaultValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, null, defaultValue);
 
             Assert.IsFalse(result.WasSuccessful);
         }
@@ -93,7 +93,7 @@
             object oldValue = new object();
             object defaultValue = new object();
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, null, defaultValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, null, defaultValue);
 
             Assert.IsTrue(result.WasSuccessful);
         }
@@ -102,7 +102,7 @@
             int oldValue = 5;
             int newValue = 5;
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
 
             Assert.IsFalse(result.WasSuccessful);
         }
@@ -111,7 +111,7 @@
             object oldValue = new object();
             object newValue = oldValue;
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
 
             Assert.IsFalse(result.WasSuccessful);
         }
@@ -120,7 +120,7 @@
             object oldValue = null;
             object newValue = new object();
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
 
             Assert.IsFalse(result.WasSuccessful);
         }
@@ -129,10 +129,10 @@
             object oldValue = new object();
             object newValue = null;
 
-            OperationResult result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue);
+            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
             Assert.IsFalse(result.WasSuccessful);
 
-            result = Operations.PerformReplaceIfDifferent(ref oldValue, newValue, null);
+            result = Perform.ReplaceIfDifferent(ref oldValue, newValue, null);
             Assert.IsFalse(result.WasSuccessful);
         }
     }
