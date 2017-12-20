@@ -21,9 +21,8 @@
         public bool HasErrors => _errors.Count != 0;
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-        protected void OnErrorsChanged(string propertyName) {
+        protected void OnErrorsChanged(string propertyName) =>
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-        }
 
         protected void ClearErrors(string propertyName = "") {
             bool fireEvent = HasErrors;
@@ -32,9 +31,8 @@
             if (fireEvent) OnPropertyChanged(nameof(HasErrors));
         }
 
-        protected void AddError(string propertyName, string error) {
+        protected void AddError(string propertyName, string error) =>
             AddErrors(propertyName, new List<string> { error });
-        }
 
         protected void AddErrors(string propertyName, IList<string> errors) {
             bool fireEvent = HasErrors == false;
@@ -55,9 +53,10 @@
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "" ) {
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "" ) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public void SignalAllPropertiesChanged() =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(""));
 
         public event EventHandler<GenericEventArgs<string, Urgency>> Notify;
         protected void FireNotifyEvent(GenericEventArgs<string, Urgency> e) =>
