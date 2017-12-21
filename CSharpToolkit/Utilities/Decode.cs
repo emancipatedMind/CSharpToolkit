@@ -26,7 +26,7 @@
             }
         }
 
-        private static string ExcelColumnName(int input) {
+        public static string ExcelColumnName(int input) {
             var stringBuilder = new System.Text.StringBuilder();
             while (input > 0) {
                 int modulo = (input - 1) % 26;
