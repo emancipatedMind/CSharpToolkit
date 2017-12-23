@@ -56,7 +56,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstractions\DataAccess\ICachedTableProvider.cs" />
+    <Compile Include="Abstractions\DataAccess\IDataOperator.cs" />
     <Compile Include="Abstractions\DataAccess\IDataReaderAccessor.cs" />
+    <Compile Include="Abstractions\DataAccess\IDataRowProvider.cs" />
     <Compile Include="Abstractions\IUserNotifier.cs" />
     <Compile Include="Abstractions\Logging\IDurationLogger.cs" />
     <Compile Include="Abstractions\Logging\IExceptionFormatter.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="DataAccess\Error\HandlingDataAccessor.cs" />
     <Compile Include="DataAccess\LoggingDataAccessor.cs" />
     <Compile Include="DataAccess\SQL\ConnectedDataReaderAccessor.cs" />
+    <Compile Include="DataAccess\SQL\SQLDataRowProvider.cs" />
     <Compile Include="DataAccess\Test\DataReaderStub.cs" />
     <Compile Include="DataAccess\ThreadLockDataAccessor.cs" />
     <Compile Include="Logging\ExceptionFormatter.cs" />
