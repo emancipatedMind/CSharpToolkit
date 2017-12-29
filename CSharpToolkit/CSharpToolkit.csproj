@@ -59,6 +59,7 @@
     <Compile Include="Abstractions\DataAccess\IDataOperator.cs" />
     <Compile Include="Abstractions\DataAccess\IDataReaderAccessor.cs" />
     <Compile Include="Abstractions\DataAccess\IDataRowProvider.cs" />
+    <Compile Include="Abstractions\IQuittable.cs" />
     <Compile Include="Abstractions\IUserNotifier.cs" />
     <Compile Include="Abstractions\Logging\IDurationLogger.cs" />
     <Compile Include="Abstractions\Logging\IExceptionFormatter.cs" />
@@ -126,6 +127,8 @@
     <Compile Include="Abstractions\IEntityBase.cs" />
     <Compile Include="XAML\IRaiseCanExecuteChanged.cs" />
     <Compile Include="XAML\IsNullConverter.cs" />
+    <Compile Include="XAML\ColorToSolidBrushConverter.cs" />
+    <Compile Include="XAML\SolidBrushToColorConverter.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
