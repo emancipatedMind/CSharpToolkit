@@ -31,6 +31,25 @@
             return target;
         }
 
+        public static OperationResult PropertyAssignmentThroughReflection(KeyValuePair<object, string> source, KeyValuePair<object, string> dest) =>
+            Get.OperationResult(() => {
+                var sourcePropertyRetrievalOperation = Get.Property(source.Key, source.Value);
+                var destPropertyRetrievalOperation = Get.Property(dest.Key, dest.Value);
+                if (sourcePropertyRetrievalOperation.HadErrors)
+                    throw sourcePropertyRetrievalOperation.Exceptions[0];
+                if (destPropertyRetrievalOperation.HadErrors)
+                    throw destPropertyRetrievalOperation.Exceptions[0];
+
+                var(getObj, getProperty) = sourcePropertyRetrievalOperation.Result;
+                var(setObj, setProperty) = destPropertyRetrievalOperation.Result;
+
+                if (setProperty.PropertyType != getProperty.PropertyType)
+                    throw new ArgumentException("Types between properties are mismatched.");
+
+                setProperty.SetValue(setObj, getProperty.GetValue(getObj, null));
+            });
+
+
         public static List<int> BaseChange(int number, int newBase, bool isBigEndian = false) =>
             Get.General<List<int>>(digits => {
 

@@ -2,6 +2,8 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Reflection;
+    using System.Linq;
     public static class Get {
 
         /*
@@ -63,6 +65,19 @@
                 return new OperationResult<T>(new Exception[] { ex });
             }
         }
+
+        public static OperationResult<(object, PropertyInfo)> Property(object target, string compoundProperty) =>
+            Get.OperationResult(() => {
+                string[] bits = compoundProperty.Split('.');
+                for (int i = 0; i < bits.Length - 1; i++) {
+                    PropertyInfo propertyToGet = target.GetType().GetProperty(bits[i], BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.SetProperty);
+                    target = propertyToGet.GetValue(target, null);
+                }
+                var propertyInfoToReturn = target.GetType().GetProperty(bits.Last(), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.SetProperty);
+                if (propertyInfoToReturn == null)
+                    throw new ArgumentException("Key value pairs supplied in constructor are incorrect.");
+                return (target, propertyInfoToReturn);
+            });
 
     }
 }
