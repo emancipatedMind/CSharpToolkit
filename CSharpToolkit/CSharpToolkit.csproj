@@ -59,7 +59,8 @@
     <Compile Include="Abstractions\DataAccess\IDataOperator.cs" />
     <Compile Include="Abstractions\DataAccess\IDataReaderAccessor.cs" />
     <Compile Include="Abstractions\DataAccess\IDataRowProvider.cs" />
-    <Compile Include="Abstractions\IDialog.cs" />
+    <Compile Include="Abstractions\IDialogControl.cs" />
+    <Compile Include="Abstractions\IDialogSignaler.cs" />
     <Compile Include="Abstractions\IQuittable.cs" />
     <Compile Include="Abstractions\IReflectionOperation.cs" />
     <Compile Include="Abstractions\IUserNotifier.cs" />
