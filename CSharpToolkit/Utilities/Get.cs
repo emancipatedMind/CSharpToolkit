@@ -67,7 +67,8 @@
         }
 
         public static OperationResult<(object, PropertyInfo)> Property(object target, string compoundProperty) =>
-            Get.OperationResult(() => {
+            OperationResult(() => {
+                object originalTarget = target;
                 string[] bits = compoundProperty.Split('.');
                 for (int i = 0; i < bits.Length - 1; i++) {
                     PropertyInfo propertyToGet = target.GetType().GetProperty(bits[i], BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.SetProperty);
@@ -75,7 +76,7 @@
                 }
                 var propertyInfoToReturn = target.GetType().GetProperty(bits.Last(), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.SetProperty);
                 if (propertyInfoToReturn == null)
-                    throw new ArgumentException("Key value pairs supplied in constructor are incorrect.");
+                    throw new ArgumentException($"On {originalTarget}, {compoundProperty} could not be found.");
                 return (target, propertyInfoToReturn);
             });
 

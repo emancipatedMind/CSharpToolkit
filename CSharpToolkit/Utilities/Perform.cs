@@ -1,6 +1,7 @@
 ﻿namespace CSharpToolkit.Utilities {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     public static class Perform {
 
         public static OperationResult ReplaceIfDifferent<T>(ref T oldValue, T newValue, T defaultValue = default(T)) {
@@ -31,23 +32,27 @@
             return target;
         }
 
-        public static OperationResult PropertyAssignmentThroughReflection(KeyValuePair<object, string> source, KeyValuePair<object, string> dest) =>
-            Get.OperationResult(() => {
-                var sourcePropertyRetrievalOperation = Get.Property(source.Key, source.Value);
-                var destPropertyRetrievalOperation = Get.Property(dest.Key, dest.Value);
-                if (sourcePropertyRetrievalOperation.HadErrors)
-                    throw sourcePropertyRetrievalOperation.Exceptions[0];
-                if (destPropertyRetrievalOperation.HadErrors)
-                    throw destPropertyRetrievalOperation.Exceptions[0];
+        public static OperationResult PropertyAssignmentThroughReflection(KeyValuePair<object, string> source, KeyValuePair<object, string> dest) {
+            var sourcePropertyRetrievalOperation = Get.Property(source.Key, source.Value);
+            var destPropertyRetrievalOperation = Get.Property(dest.Key, dest.Value);
 
-                var(getObj, getProperty) = sourcePropertyRetrievalOperation.Result;
-                var(setObj, setProperty) = destPropertyRetrievalOperation.Result;
+            var exceptionList = new List<Exception>();
+            exceptionList.AddRange(sourcePropertyRetrievalOperation.Exceptions);
+            exceptionList.AddRange(destPropertyRetrievalOperation.Exceptions);
+            if (exceptionList.Any())
+                return new OperationResult(exceptionList);
 
-                if (setProperty.PropertyType != getProperty.PropertyType)
-                    throw new ArgumentException("Types between properties are mismatched.");
+            var (getObj, getProperty) = sourcePropertyRetrievalOperation.Result;
+            var (setObj, setProperty) = destPropertyRetrievalOperation.Result;
 
-                setProperty.SetValue(setObj, getProperty.GetValue(getObj, null));
-            });
+            if (setProperty.PropertyType != getProperty.PropertyType)
+                return new OperationResult(
+                    new Exception[] { new ArgumentException("Types between properties are mismatched.") }
+                );
+
+            setProperty.SetValue(setObj, getProperty.GetValue(getObj, null));
+            return new OperationResult(true);
+        }
 
 
         public static List<int> BaseChange(int number, int newBase, bool isBigEndian = false) =>
