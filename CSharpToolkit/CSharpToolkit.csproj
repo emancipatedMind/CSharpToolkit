@@ -119,9 +119,11 @@
     <Compile Include="Utilities\Operations.cs" />
     <Compile Include="XAML\AwaitableDelegateCommand.cs" />
     <Compile Include="XAML\BooleanNotConverter.cs" />
+    <Compile Include="XAML\CloseBehavior.cs" />
     <Compile Include="XAML\CommandExtensions.cs" />
     <Compile Include="XAML\CustomCollection.cs" />
     <Compile Include="XAML\DelegateCommand.cs" />
+    <Compile Include="XAML\DialogSignalerEnvironment.cs" />
     <Compile Include="XAML\EntityBase.cs" />
     <Compile Include="XAML\EnumBindingSourceExtension.cs" />
     <Compile Include="XAML\EnumDescriptionTypeConverter.cs" />
