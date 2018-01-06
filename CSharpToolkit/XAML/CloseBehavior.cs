@@ -57,9 +57,9 @@
             Type environmentType = typeof(DialogSignalerEnvironment<>)
                 .MakeGenericType(dialogControlInterface.GenericTypeArguments);
 
-            EventInfo cancelEvent = environmentType.GetEvent("Cancelled");
-            EventInfo dialogClosedEvent = environmentType.GetEvent("DialogClosed");
-            EventInfo successfulEvent = environmentType.GetEvent("Successful");
+            EventInfo cancelEvent = environmentType.GetEvent(nameof(DialogSignalerEnvironment<EventArgs>.Cancelled));
+            EventInfo dialogClosedEvent = environmentType.GetEvent(nameof(DialogSignalerEnvironment<EventArgs>.DialogClosed));
+            EventInfo successfulEvent = environmentType.GetEvent(nameof(DialogSignalerEnvironment<EventArgs>.Successful));
 
             Delegate cancelDelegate =
                 Delegate.CreateDelegate(cancelEvent.EventHandlerType, null, new EventHandler(CleanupWindow).Method);
@@ -75,7 +75,7 @@
         }
 
         private static void CleanupWindow(object sender, EventArgs e) {
-            PropertyInfo windowProperty = sender.GetType().GetProperty("Dialog");
+            PropertyInfo windowProperty = sender.GetType().GetProperty(nameof(DialogSignalerEnvironment<EventArgs>.Dialog));
             var window = (Window)windowProperty.GetValue(sender);
             if (sender is IDisposable)
                 ((IDisposable)sender).Dispose();
@@ -86,13 +86,13 @@
         private static void DialogClosed_Closed(object sender, EventArgs e) {
             Type senderType = sender.GetType();
 
-            PropertyInfo dialogControllerProperty = senderType.GetProperty("DialogController");
+            PropertyInfo dialogControllerProperty = senderType.GetProperty(nameof(DialogSignalerEnvironment<EventArgs>.DialogController));
             object controller = dialogControllerProperty.GetValue(sender);
 
-            PropertyInfo cancelCommandProperty = controller.GetType().GetProperty("Cancel");
+            PropertyInfo cancelCommandProperty = controller.GetType().GetProperty(nameof(IDialogControl<EventArgs>.Cancel));
             var cancelCommand = cancelCommandProperty.GetValue(controller);
 
-            MethodInfo executeMethod = typeof(DelegateCommand).GetMethod("Execute");
+            MethodInfo executeMethod = typeof(DelegateCommand).GetMethod(nameof(DelegateCommand.Execute));
             if (sender is IDisposable)
                 ((IDisposable)sender).Dispose();
 
