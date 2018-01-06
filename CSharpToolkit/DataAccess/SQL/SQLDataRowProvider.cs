@@ -1,11 +1,11 @@
 ﻿namespace CSharpToolkit.DataAccess.SQL {
-    using System;
     using System.Linq;
     using System.Collections.Generic;
     using System.Data;
     using Abstractions.DataAccess;
     using Utilities;
     using System.Data.SqlClient;
+    using System;
 
     public class SQLDataRowProvider : IDataRowProvider {
 
@@ -17,10 +17,7 @@
 
         public int Timeout { get; set; } = 30;
 
-        public OperationResult<List<DataRow>> SubmitQuery(string query) =>
-            SubmitQuery(query, CommandType.Text, new Dictionary<string, object>());
-
-        OperationResult<List<DataRow>> SubmitQuery(string sql, CommandType commandType, Dictionary<string, object> parameters) =>
+        public OperationResult<List<DataRow>> SubmitQuery(string sql, CommandType commandType, IEnumerable<KeyValuePair<string, object>> parameters) =>
             Get.OperationResult(() => {
                 var command = new SqlCommand {
                     CommandTimeout = Timeout,

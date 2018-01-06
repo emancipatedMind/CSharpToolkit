@@ -59,6 +59,7 @@
     <Compile Include="Abstractions\DataAccess\IDataOperator.cs" />
     <Compile Include="Abstractions\DataAccess\IDataReaderAccessor.cs" />
     <Compile Include="Abstractions\DataAccess\IDataRowProvider.cs" />
+    <Compile Include="Abstractions\DataAccess\ISimpleDataOrder.cs" />
     <Compile Include="Abstractions\IDialogControl.cs" />
     <Compile Include="Abstractions\IDialogSignaler.cs" />
     <Compile Include="Abstractions\IQuittable.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="DataAccess\DisconnectedDataReaderAccessor.cs" />
     <Compile Include="DataAccess\Error\DataReader.cs" />
     <Compile Include="DataAccess\Error\HandlingDataAccessor.cs" />
+    <Compile Include="DataAccess\SimpleDataOrder.cs" />
     <Compile Include="DataAccess\LoggingDataAccessor.cs" />
     <Compile Include="DataAccess\SQL\ConnectedDataReaderAccessor.cs" />
     <Compile Include="DataAccess\SQL\SQLDataRowProvider.cs" />

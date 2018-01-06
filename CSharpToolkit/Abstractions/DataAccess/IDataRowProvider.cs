@@ -3,6 +3,6 @@
     using System.Data;
     using Utilities;
     public interface IDataRowProvider {
-        OperationResult<List<DataRow>> SubmitQuery(string query);
+        OperationResult<List<DataRow>> SubmitQuery(string sql, CommandType commandType, IEnumerable<KeyValuePair<string, object>> parameters);
     }
 }
