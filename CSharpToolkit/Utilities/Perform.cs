@@ -5,12 +5,8 @@
     public static class Perform {
 
         public static OperationResult ReplaceIfDifferent<T>(ref T oldValue, T newValue, T defaultValue = default(T)) {
-            if (newValue == null) {
-                if (defaultValue == null)
-                    return new OperationResult(false);
-                else
-                    newValue = defaultValue;
-            }
+            if (newValue == null)
+                newValue = defaultValue;
 
             if (oldValue?.Equals(newValue) == true)
                 return new OperationResult(false);

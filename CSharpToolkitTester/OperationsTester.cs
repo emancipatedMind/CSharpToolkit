@@ -115,16 +115,5 @@
 
             Assert.IsFalse(result.WasSuccessful);
         }
-        [Test]
-        public void PerformReplaceIfDifferentReturnsFalseIfNewValueAndDefaultValueAreNull() {
-            object oldValue = new object();
-            object newValue = null;
-
-            OperationResult result = Perform.ReplaceIfDifferent(ref oldValue, newValue);
-            Assert.IsFalse(result.WasSuccessful);
-
-            result = Perform.ReplaceIfDifferent(ref oldValue, newValue, null);
-            Assert.IsFalse(result.WasSuccessful);
-        }
     }
 }
