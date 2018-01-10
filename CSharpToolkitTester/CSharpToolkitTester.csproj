@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="OperationsTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLInjectionValidatorShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
