@@ -71,7 +71,7 @@
             var results = new List<ValidationResult>();
             var vc = new ValidationContext(this, null, null) { MemberName = propertyName };
             var isValid = Validator.TryValidateProperty(value, vc, results);
-            return isValid ? null : Array.ConvertAll(results.ToArray(), o => o.ErrorMessage);
+            return isValid ? new string[0] : Array.ConvertAll(results.ToArray(), o => o.ErrorMessage);
         }
     }
 }
