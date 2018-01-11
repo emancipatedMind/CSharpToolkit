@@ -4,7 +4,15 @@
     using System.Collections.Generic;
     using System.Linq;
     using Utilities;
+    /// <summary>
+    /// Formats Exception for logging.
+    /// </summary>
     public class ExceptionFormatter : IExceptionFormatter {
+        /// <summary>
+        /// Format exception into string.
+        /// </summary>
+        /// <param name="ex">Exception to format.</param>
+        /// <returns>Exception formatted as string.</returns>
         public string FormatException(Exception ex) => string.Join("\r\n", Format(ex, 0));
 
         List<string> Format(Exception ex, int precedingSpaceCount) =>

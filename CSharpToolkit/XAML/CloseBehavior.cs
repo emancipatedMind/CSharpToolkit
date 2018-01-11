@@ -4,14 +4,31 @@
     using System.Linq;
     using System.Reflection;
     using System.Windows;
+    /// <summary>
+    /// A behavior used by windows to participate in dialog operations. DataContext of window must implement
+    /// CSharpToolkit.Abstractions.DialogControl in order to use this behavior.
+    /// </summary>
     public class CloseBehavior {
 
+        /// <summary>
+        /// YieldDialogControl's getter method.
+        /// </summary>
+        /// <param name="obj">Object for which property is requested.</param>
+        /// <returns>YieldDialogControl's status. Whether or not the window is participating in this behavior.</returns>
         public static bool GetYieldDialogControl(DependencyObject obj) =>
             (bool)obj.GetValue(YieldDialogControlProperty);
 
+        /// <summary>
+        /// YieldDialogControl's setter method.
+        /// </summary>
+        /// <param name="obj">Object for which property is requested.</param>
+        /// <param name="value">New value for YieldDialogControl.</param>
         public static void SetYieldDialogControl(DependencyObject obj, bool value) =>
             obj.SetValue(YieldDialogControlProperty, value);
 
+        /// <summary>
+        /// Dependency property for YieldDialogControl.
+        /// </summary>
         public static readonly DependencyProperty YieldDialogControlProperty =
             DependencyProperty.RegisterAttached(
                 "YieldDialogControl",

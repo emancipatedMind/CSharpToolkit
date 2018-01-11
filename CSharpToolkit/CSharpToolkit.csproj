@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\CSharpToolkit.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -111,10 +112,10 @@
     <Compile Include="Diagnostics\ReflectionServices.cs" />
     <Compile Include="Console\BarDrawerByPercentage.cs" />
     <Compile Include="Console\ConsoleBarDrawer.cs" />
-    <Compile Include="Logging\EventArgs\ActionEventArgs.cs" />
-    <Compile Include="Logging\EventArgs\DataCollectionEventArgs.cs" />
-    <Compile Include="Logging\EventArgs\GenericCollectionEventArgs.cs" />
-    <Compile Include="Logging\EventArgs\GenericEventArgs.cs" />
+    <Compile Include="EventArgs\ActionEventArgs.cs" />
+    <Compile Include="EventArgs\DataCollectionEventArgs.cs" />
+    <Compile Include="EventArgs\GenericCollectionEventArgs.cs" />
+    <Compile Include="EventArgs\GenericEventArgs.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Factories\PeriodicMethodInvokerFactory.cs" />
     <Compile Include="Geometry\AngleConversions.cs" />
