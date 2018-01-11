@@ -63,7 +63,8 @@
         public Clause AddClause(string parameterName, object value, Func<string, string> clause, Func<object, bool> condition) {
             bool conditionSatisfied = condition(value);
             if (conditionSatisfied) {
-                AddClause(parameterName, value, clause);
+                _AddClause(clause(parameterName.Trim()));
+                AddParameter(parameterName, value);
                 return Clone();
             }
             return this;
@@ -77,8 +78,8 @@
         /// <param name="clause">The clause for which the parameter name will be inserted.</param>
         /// <returns>Modified clause.</returns>
         public Clause AddClause(string parameterName, object value, Func<string, string> clause) {
+            _AddClause(clause(parameterName.Trim()));
             AddParameter(parameterName, value);
-            AddClause(clause(parameterName.Trim()));
             return Clone();
         }
 
@@ -89,7 +90,9 @@
         /// <returns>Modified clause.</returns>
         public Clause AddClause(Clause clause) {
             SimpleDataOrder dataOrder = clause.Build();
-            AddClause(dataOrder.Query);
+            if (string.IsNullOrEmpty(dataOrder.Query) && dataOrder.Parameters.Any() == false)
+                return this;
+            _AddClause(dataOrder.Query);
             AddParameter(dataOrder.Parameters);
             return Clone();
         }
@@ -100,9 +103,15 @@
         /// <param name="clause">Simple clause.</param>
         /// <returns>Modified clause.</returns>
         public Clause AddClause(string clause) {
+            if (string.IsNullOrEmpty(clause)) return this;
+
+            _AddClause(clause);
+            return Clone();
+        }
+
+        private void _AddClause(string clause) {
             lock (_token) {
                 _clauses.Add(Format(clause));
-                return Clone();
             }
         }
 
