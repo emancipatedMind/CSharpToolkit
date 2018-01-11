@@ -83,6 +83,8 @@
     <Compile Include="Algorithms\SequenceChecker.cs" />
     <Compile Include="Algorithms\SequenceSeeker.cs" />
     <Compile Include="DataAccess\CachedTableProvider.cs" />
+    <Compile Include="DataAccess\Clause.cs" />
+    <Compile Include="DataAccess\ClauseType.cs" />
     <Compile Include="DataAccess\DisconnectedDataReaderAccessor.cs" />
     <Compile Include="DataAccess\Error\DataReader.cs" />
     <Compile Include="DataAccess\Error\HandlingDataAccessor.cs" />
