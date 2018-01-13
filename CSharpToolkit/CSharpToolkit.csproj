@@ -66,6 +66,7 @@
     <Compile Include="Abstractions\IDialogSignaler.cs" />
     <Compile Include="Abstractions\IQuittable.cs" />
     <Compile Include="Abstractions\IReflectionOperation.cs" />
+    <Compile Include="Abstractions\IStringFormatter.cs" />
     <Compile Include="Abstractions\IUserNotifier.cs" />
     <Compile Include="Abstractions\IValidate.cs" />
     <Compile Include="Abstractions\Logging\IDurationLogger.cs" />
@@ -90,7 +91,7 @@
     <Compile Include="DataAccess\Error\DataReader.cs" />
     <Compile Include="DataAccess\Error\HandlingDataAccessor.cs" />
     <Compile Include="DataAccess\SimpleDataOrder.cs" />
-    <Compile Include="DataAccess\LoggingDataAccessor.cs" />
+    <Compile Include="Logging\LoggingDataAccessor.cs" />
     <Compile Include="DataAccess\SQL\ConnectedDataReaderAccessor.cs" />
     <Compile Include="DataAccess\SQL\SQLDataRowProvider.cs" />
     <Compile Include="DataAccess\Test\DataReaderStub.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Logging\ExceptionLogger.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\DurationLogger.cs" />
+    <Compile Include="Logging\ExceptionLoggingDataRowProvider.cs" />
     <Compile Include="Logging\TimeStampLogger.cs" />
     <Compile Include="DataAccess\Null\DataReaderAccessor.cs" />
     <Compile Include="DataAccess\Test\DataReaderAccessorStub.cs" />
@@ -132,6 +134,8 @@
     <Compile Include="XAML\CustomCollection.cs" />
     <Compile Include="XAML\DelegateCommand.cs" />
     <Compile Include="XAML\DialogSignalerEnvironment.cs" />
+    <Compile Include="XAML\DoubleClickListView.cs" />
+    <Compile Include="XAML\DoubleClickListViewItem.cs" />
     <Compile Include="XAML\EntityBase.cs" />
     <Compile Include="XAML\EnumBindingSourceExtension.cs" />
     <Compile Include="XAML\EnumDescriptionTypeConverter.cs" />
