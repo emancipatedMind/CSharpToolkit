@@ -19,7 +19,8 @@
         }
 
         /// <summary>
-        /// Create new clause.
+        /// Instantiate clause builder. Immutable clause builder. Each clause returned is unique so each may be reused for
+        /// building, or for adding to.
         /// </summary>
         /// <param name="type">Specify clause type.</param>
         /// <returns>New clause.</returns>
@@ -63,9 +64,11 @@
         public Clause AddClause(string parameterName, object value, Func<string, string> clause, Func<object, bool> condition) {
             bool conditionSatisfied = condition(value);
             if (conditionSatisfied) {
-                _AddClause(clause(parameterName.Trim()));
-                AddParameter(parameterName, value);
-                return Clone();
+                parameterName = parameterName.Trim();
+                return Clone((c, p) => {
+                    c.Add(Format(clause(parameterName)));
+                    p.Add(new KeyValuePair<string, object>(parameterName, value));
+                });
             }
             return this;
         }
@@ -77,11 +80,12 @@
         /// <param name="value">Parameter value.</param>
         /// <param name="clause">The clause for which the parameter name will be inserted.</param>
         /// <returns>Modified clause.</returns>
-        public Clause AddClause(string parameterName, object value, Func<string, string> clause) {
-            _AddClause(clause(parameterName.Trim()));
-            AddParameter(parameterName, value);
-            return Clone();
-        }
+        public Clause AddClause(string parameterName, object value, Func<string, string> clause) =>
+            Clone((c, p) => {
+                parameterName = parameterName.Trim();
+                c.Add(Format(clause(parameterName)));
+                p.Add(new KeyValuePair<string, object>(parameterName, value));
+            });
 
         /// <summary>
         /// Add previous built clause to this clause.
@@ -92,9 +96,11 @@
             SimpleDataOrder dataOrder = clause.Build();
             if (string.IsNullOrEmpty(dataOrder.Query) && dataOrder.Parameters.Any() == false)
                 return this;
-            _AddClause(dataOrder.Query);
-            AddParameter(dataOrder.Parameters);
-            return Clone();
+
+            return Clone((c, p) => {
+                c.Add(Format(dataOrder.Query));
+                p.AddRange(dataOrder.Parameters);
+            });
         }
 
         /// <summary>
@@ -105,32 +111,15 @@
         public Clause AddClause(string clause) {
             if (string.IsNullOrEmpty(clause)) return this;
 
-            _AddClause(clause);
-            return Clone();
+            return Clone((c, p) => c.Add(Format(clause)));
         }
 
-        private void _AddClause(string clause) {
-            lock (_token) {
-                _clauses.Add(Format(clause));
-            }
+        private Clause Clone(Action<List<string>, List<KeyValuePair<string, object>>> callback) {
+            var clauses = new List<string>(_clauses);
+            var parameters = new List<KeyValuePair<string, object>>(_parameters);
+            callback(clauses, parameters);
+            return new Clause(clauses, parameters, _type);
         }
-
-        private void AddParameter(IEnumerable<KeyValuePair<string, object>> parameters) {
-            foreach (var parameter in parameters)
-                AddParameter(parameter.Key, parameter.Value);
-        }
-
-        private void AddParameter(KeyValuePair<string, object> parameter ) =>
-            AddParameter(parameter.Key, parameter.Value);
-
-        private void AddParameter(string key, object value) {
-            lock (_token) {
-                _parameters.Add(new KeyValuePair<string, object>(key.Trim(), value));
-            }
-        }
-
-        private Clause Clone() =>
-            new Clause(new List<string>(_clauses), new List<KeyValuePair<string, object>>(_parameters), _type);
 
         /// <summary>
         /// Trims trailing whitespaces, and adds single white space as header.
