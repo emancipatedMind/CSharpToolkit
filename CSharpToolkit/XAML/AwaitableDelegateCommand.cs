@@ -2,6 +2,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Windows.Input;
+    using Abstractions;
     /// <summary>
     /// Creates awaitable generic command that accepts object of type object as first parameter.
     /// </summary>

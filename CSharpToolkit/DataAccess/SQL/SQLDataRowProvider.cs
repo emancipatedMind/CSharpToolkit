@@ -2,7 +2,7 @@
     using System.Linq;
     using System.Collections.Generic;
     using System.Data;
-    using Abstractions.DataAccess;
+    using Abstractions;
     using Utilities;
     using System.Data.SqlClient;
     /// <summary>

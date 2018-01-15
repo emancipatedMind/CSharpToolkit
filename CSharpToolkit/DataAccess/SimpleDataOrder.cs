@@ -1,6 +1,6 @@
 ﻿namespace CSharpToolkit.DataAccess {
     using System.Collections.Generic;
-    using Abstractions.DataAccess;
+    using Abstractions;
     /// <summary>
     /// Represents a simple data order containing a query, and its parameters.
     /// </summary>

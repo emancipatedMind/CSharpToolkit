@@ -1,6 +1,6 @@
 ﻿namespace CSharpToolkit.Logging {
     using System;
-    using Abstractions.Logging;
+    using Abstractions;
     using EventArgs;
     /// <summary>
     /// Logs exceptions.

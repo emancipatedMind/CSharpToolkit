@@ -1,5 +1,5 @@
 ﻿namespace CSharpToolkit.Logging {
-    using Abstractions.Logging;
+    using Logging.Abstractions;
     using System;
     using System.Collections.Generic;
     using System.Linq;

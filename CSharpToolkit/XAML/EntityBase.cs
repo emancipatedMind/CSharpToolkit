@@ -1,5 +1,6 @@
 ﻿namespace CSharpToolkit.XAML {
     using Abstractions;
+    using Utilities.Abstractions;
     using EventArgs;
     using System;
     using System.Collections;

@@ -1,6 +1,7 @@
 ﻿namespace CSharpToolkit.XAML {
     using System;
     using System.Windows.Input;
+    using Abstractions;
     /// <summary>
     /// Creates generic command that accepts object of type object as first parameter.
     /// </summary>

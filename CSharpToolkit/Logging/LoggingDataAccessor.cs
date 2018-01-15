@@ -1,8 +1,8 @@
 ﻿namespace CSharpToolkit.DataAccess {
     using System;
     using System.Data;
-    using Abstractions.DataAccess;
-    using Abstractions.Logging;
+    using Abstractions;
+    using Logging.Abstractions;
     public class LoggingDataAccessor : IDataReaderAccessor {
 
         IDurationLogger _logger;

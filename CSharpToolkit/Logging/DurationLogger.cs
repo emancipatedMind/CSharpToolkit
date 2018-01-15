@@ -1,8 +1,8 @@
 ﻿namespace CSharpToolkit.Logging {
     using System;
     using System.Data;
-    using Abstractions.DataAccess;
-    using Abstractions.Logging;
+    using DataAccess.Abstractions;
+    using Logging.Abstractions;
     using EventArgs;
 
     /// <summary>

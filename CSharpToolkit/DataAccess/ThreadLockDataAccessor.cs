@@ -1,7 +1,7 @@
 ﻿namespace CSharpToolkit.DataAccess {
     using System;
     using System.Data;
-    using Abstractions.DataAccess;
+    using Abstractions;
     public class ThreadLockDataAccessor : IDataReaderAccessor {
 
         IDataReaderAccessor _component;

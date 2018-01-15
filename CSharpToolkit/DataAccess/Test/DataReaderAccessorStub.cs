@@ -1,7 +1,7 @@
 ﻿namespace CSharpToolkit.DataAccess.Test {
     using System;
     using System.Data;
-    public class DataReaderAccessorStub : Abstractions.DataAccess.IDataReaderAccessor {
+    public class DataReaderAccessorStub : Abstractions.IDataReaderAccessor {
 
         IDataReader _reader;
 

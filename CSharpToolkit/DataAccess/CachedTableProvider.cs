@@ -1,5 +1,5 @@
 ﻿namespace CSharpToolkit.DataAccess {
-    using Abstractions.DataAccess;
+    using Abstractions;
     using System.Data;
 
     public class CachedTableProvider : ICachedTableProvider {

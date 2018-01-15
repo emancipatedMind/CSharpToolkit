@@ -1,8 +1,8 @@
 ﻿namespace CSharpToolkit.DataAccess.Error {
     using System;
     using System.Data;
-    using Abstractions.DataAccess;
-    using Abstractions.Logging;
+    using Abstractions;
+    using Logging.Abstractions;
     public class HandlingDataAccessor : IDataReaderAccessor, ILoggable {
 
         IDataReaderAccessor _component;

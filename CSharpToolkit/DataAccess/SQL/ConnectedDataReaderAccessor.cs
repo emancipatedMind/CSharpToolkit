@@ -1,5 +1,5 @@
 ﻿namespace CSharpToolkit.DataAccess.SQL {
-    using Abstractions.DataAccess;
+    using Abstractions;
     using System;
     using System.Data;
     using System.Data.SqlClient;

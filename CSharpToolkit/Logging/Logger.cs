@@ -1,7 +1,7 @@
 ﻿namespace CSharpToolkit.Logging {
     using System;
     using System.IO;
-    using Abstractions.Logging;
+    using Logging.Abstractions;
     using EventArgs;
     /// <summary>
     /// Generic logger whose file name may be swapped.

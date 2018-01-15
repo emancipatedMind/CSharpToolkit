@@ -2,8 +2,8 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using Abstractions.DataAccess;
-    using Abstractions.Logging;
+    using Abstractions;
+    using DataAccess.Abstractions;
     using Utilities;
     using System.Linq;
 
