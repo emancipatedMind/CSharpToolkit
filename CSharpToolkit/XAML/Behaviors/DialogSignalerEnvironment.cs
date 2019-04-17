@@ -5,15 +5,15 @@
     /// <summary>
     /// Used by CloseBehavior to contain state of IDialogSignaler object.
     /// </summary>
-    /// <typeparam name="T">Type for use by Successful event. Of Type EventArgs</typeparam>
-    public class DialogSignalerEnvironment<T> : IDisposable, IDialogSignaler<T> where T : EventArgs {
+    /// <typeparam name="TEventArgs">Type for use by Successful event. Of Type EventArgs</typeparam>
+    public class DialogSignalerEnvironment<TEventArgs> : IDisposable, IDialogSignaler<TEventArgs> where TEventArgs : EventArgs {
 
         /// <summary>
         /// Instantiates class of type DialogSignalerEnvironment.
         /// </summary>
         /// <param name="dialogController">DialogSignaler object or ViewModel whose state is to be contained.</param>
         /// <param name="dialog">DialogSignaler or ViewModel's window.</param>
-        public DialogSignalerEnvironment(IDialogSignaler<T> dialogController, Window dialog) {
+        public DialogSignalerEnvironment(IDialogSignaler<TEventArgs> dialogController, Window dialog) {
             Dialog = dialog;
             Dialog.Closed += OnDialogClosed;
             DialogController = dialogController;
@@ -29,7 +29,7 @@
         /// <summary>
         /// DialogSignaler object or ViewModel whose state is contained.
         /// </summary>
-        public IDialogSignaler<T> DialogController { get; private set; }
+        public IDialogSignaler<TEventArgs> DialogController { get; private set; }
 
         /// <summary>
         /// Raised when dialog is closed.
@@ -42,7 +42,7 @@
         /// <summary>
         /// Raised when DialogSignaler object or ViewModel signals operation was successful.
         /// </summary>
-        public event EventHandler<T> Successful;
+        public event EventHandler<TEventArgs> Successful;
 
         void OnDialogClosed(object sender, EventArgs e) {
             DialogClosed?.Invoke(this, e);
@@ -52,7 +52,7 @@
             Cancelled?.Invoke(this, e);
         }
 
-        void OnSuccessful(object sender, T e) {
+        void OnSuccessful(object sender, TEventArgs e) {
             Successful?.Invoke(this, e);
         }
 

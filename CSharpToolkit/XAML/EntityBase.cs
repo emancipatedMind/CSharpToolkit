@@ -1,19 +1,22 @@
 ﻿namespace CSharpToolkit.XAML {
     using Abstractions;
+    using Utilities;
     using Utilities.Abstractions;
-    using EventArgs;
+    using Utilities.EventArgs;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.ComponentModel.DataAnnotations;
     /// <summary>
     /// Class used as base for ViewModel providing common ViewModel operations.
     /// </summary>
-    public abstract class EntityBase : IEntityBase {
-        private readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+    public abstract class EntityBase : IUserNotifier, INotifyDataErrorInfo, INotifyPropertyChanged, IDataErrorInfo, IExplicitErrorAdder, INotifyDisposable {
+        private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+        private bool disposedValue = false;
 
         /// <summary>
         /// Gets errors recorded by Property.
@@ -29,14 +32,15 @@
         /// <summary>
         /// Whether any errors have been recorded.
         /// </summary>
-        public bool HasErrors => _errors.Count != 0;
+        public bool HasErrors => _errors.Any();
 
         /// <summary>
         /// Raised whenever errors are added or removed.
         /// </summary>
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
         /// <summary>
-        /// Raise ErrorsChanged event.
+        /// Raise <see cref="ErrorsChanged"/> event.
         /// </summary>
         protected void OnErrorsChanged(string propertyName) =>
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
@@ -58,28 +62,36 @@
         /// <param name="propertyName">Property name for which errors should be added.</param>
         /// <param name="error">Error text.</param>
         protected void AddError(string propertyName, string error) =>
-            AddErrors(propertyName, new List<string> { error });
+            AddErrors(propertyName, new[] { error });
 
         /// <summary>
         /// Add errors.
         /// </summary>
         /// <param name="propertyName">Property name for which errors should be added.</param>
         /// <param name="errors">Error text to add.</param>
-        protected void AddErrors(string propertyName, IList<string> errors) {
-            bool fireEvent = HasErrors == false;
-            bool changed = false;
-            if (!_errors.ContainsKey(propertyName)) {
+        protected void AddErrors(string propertyName, IEnumerable<string> errors) {
+            errors = errors ?? new string[0];
+            if (errors.Any() == false)
+                return;
+
+            bool hasErrorsHasChanged = HasErrors == false;
+            bool incomingPropertyErrorsHasChanged = false;
+
+            if (_errors.ContainsKey(propertyName) == false) {
                 _errors.Add(propertyName, new List<string>());
-                changed = true;
+                incomingPropertyErrorsHasChanged = true;
             }
-            errors.ToList().ForEach(x => {
-                if (_errors[propertyName].Contains(x)) return;
-                _errors[propertyName].Add(x);
-                changed = true;
-            });
-            if (changed) {
+
+            foreach (var error in errors) {
+                if (_errors[propertyName].Contains(error))
+                    continue;
+                _errors[propertyName].Add(error);
+                incomingPropertyErrorsHasChanged = true;
+            }
+
+            if (incomingPropertyErrorsHasChanged) {
                 OnErrorsChanged(propertyName);
-                if (fireEvent) OnPropertyChanged(nameof(HasErrors));
+                if (hasErrorsHasChanged) OnPropertyChanged(nameof(HasErrors));
             }
         }
 
@@ -87,28 +99,56 @@
         /// Fired whenever an important property has changed.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Signal that property has changed. If no argument is provided, and called within getter or setter for Property, that property name is passed automatically.
         /// </summary>
-        /// <param name="propertyName"></param>
+        /// <param name="propertyName">The name of the property to signal that has changed.</param>
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "" ) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
         /// <summary>
-        /// Signal that all properties have changed. Analogous to calling OnPropertyChanged with an empty string.
+        /// A helper method that will simply assign newValue to field if they are different, and fire PropertyChanged event with propertyName. If propertyName not supplied, Caller's name will be used. 
         /// </summary>
-        public void SignalAllPropertiesChanged() =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(""));
+        /// <typeparam name="TProperty">Value type.</typeparam>
+        /// <param name="field">The field for which swap will be performed.</param>
+        /// <param name="newValue">The new value to check.</param>
+        /// <param name="defaultValue">Default value for use if newValue is null.</param>
+        /// <param name="callerMemberName">The name of the property to signal that has changed.</param>
+        protected void FirePropertyChangedIfDifferent<TProperty>(ref TProperty field, TProperty newValue, TProperty defaultValue = default(TProperty),[CallerMemberName] string callerMemberName = "") {
+            if (Perform.ReplaceIfDifferent(ref field, newValue, defaultValue).WasSuccessful) {
+                OnPropertyChanged(callerMemberName);
+            }
+        }
+
+        /// <summary>
+        /// Performs a replace of a property using the propertyName on the obj provided. If new value is null, default value is consulted. If it is also null, this is what will be assigned.
+        /// </summary>
+        /// <typeparam name="TProperty">Value type.</typeparam>
+        /// <param name="obj">The object to use during replace.</param>
+        /// <param name="propertyName">The property name to use for replace.</param>
+        /// <param name="newValue">New value for variable.</param>
+        /// <param name="defaultValue">Default value for use if newValue is null.</param>
+        /// <param name="callerMemberName">The name of the property to signal that has changed.</param>
+        /// <returns>Operation result denoting whether value was updated.</returns>
+        protected void FirePropertyChangedIfDifferent<TProperty>(object obj, string propertyName, TProperty newValue, TProperty defaultValue = default(TProperty),[CallerMemberName] string callerMemberName = "") {
+            if (Perform.ReplaceIfDifferent(obj, propertyName, newValue, defaultValue).WasSuccessful) {
+                OnPropertyChanged(callerMemberName);
+            }
+        }
 
         /// <summary>
         /// Fired whenever a notification needs to be given.
         /// </summary>
         public event EventHandler<GenericEventArgs<string, Urgency>> Notify;
+
         /// <summary>
         /// Fire notify event.
         /// </summary>
         /// <param name="e">Event arguments.</param>
         protected void FireNotifyEvent(GenericEventArgs<string, Urgency> e) =>
             Notify?.Invoke(this, e);
+
         /// <summary>
         /// Fire notify event.
         /// </summary>
@@ -118,14 +158,15 @@
             Notify?.Invoke(this, new GenericEventArgs<string, Urgency>(notification, urgency));
 
         /// <summary>
-        /// Simple error text. Binding for property must have ValidatesOnDataErrors set to true.
+        /// Simple error text. Binding for property must have <see cref="System.Windows.Data.Binding.ValidatesOnDataErrors"/> set to true.
         /// </summary>
-        public virtual string Error { get; }
+        public virtual string Error { get; } = "";
+
         /// <summary>
-        /// Indexer for use during validation. Binding for property must have ValidatesOnDataErrors set to true.
+        /// Indexer for use during validation. Binding for property must have <see cref="System.Windows.Data.Binding.ValidatesOnDataErrors"/> set to true.
         /// </summary>
-        /// <param name="columnName"></param>
-        /// <returns></returns>
+        /// <param name="columnName">Column for validation.</param>
+        /// <returns>Error found from validation.</returns>
         public virtual string this[string columnName] => "";
 
         /// <summary>
@@ -141,5 +182,50 @@
             var isValid = Validator.TryValidateProperty(value, vc, results);
             return isValid ? new string[0] : Array.ConvertAll(results.ToArray(), o => o.ErrorMessage);
         }
+
+        void IExplicitErrorAdder.AddError(string propertyName, Exception ex) {
+            if (GetType().GetProperties().Select(prop => prop.Name).Contains(propertyName) == false)
+                return;
+
+            AddError(propertyName, ex.Message);
+        }
+
+        #region IDisposable Support
+        /// <summary>
+        /// Notification that disposing has finished.
+        /// </summary>
+        public event EventHandler Disposed;
+
+        /// <summary>
+        /// Called to complete disposing.
+        /// </summary>
+        /// <param name="disposing">Whether or not managed resources are released.</param>
+        protected virtual void Dispose(bool disposing) {
+            if (!disposedValue) {
+                if (disposing) {
+                    _errors.Clear();
+
+                    ErrorsChanged = null;
+                    Notify = null;
+                    PropertyChanged = null;
+                }
+                disposedValue = true;
+            }
+            Disposed?.Invoke(this, EventArgs.Empty);
+            Disposed = null;
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        /// <summary>
+        /// Used to release resources in use by the object.
+        /// </summary>
+        public void Dispose() {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
+
     }
 }

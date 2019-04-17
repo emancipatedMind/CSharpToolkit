@@ -1,4 +1,4 @@
-﻿namespace Dispatch.App_Data.Resources {
+﻿namespace Dispatch.App_Code.Resources {
     using System.Windows;
     using System.Windows.Controls;
     [StyleTypedProperty(Property = "ItemContainerStyle", StyleTargetType = typeof(DoubleClickListViewItem))]

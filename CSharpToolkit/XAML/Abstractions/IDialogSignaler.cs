@@ -1,10 +1,10 @@
 ﻿namespace CSharpToolkit.XAML.Abstractions {
     using System;
     /// <summary>
-    /// Used by class to participate in dialog signaling.
+    /// Used by class to participate in dialog signaling. Use <see cref="IDialogControl{T}"/> when participating in dialog control. Internal use only.
     /// </summary>
-    /// <typeparam name="T">Type of EventArgs when dialog is successful.</typeparam>
-    public interface IDialogSignaler<T> where T : EventArgs {
+    /// <typeparam name="TEventArgs">Type of EventArgs when dialog is successful.</typeparam>
+    public interface IDialogSignaler<TEventArgs> where TEventArgs : EventArgs {
         /// <summary>
         /// Raised when IDialogSignaler is cancelled.
         /// </summary>
@@ -12,6 +12,6 @@
         /// <summary>
         /// Raised when IDialogSignaler signals success.
         /// </summary>
-        event EventHandler<T> Successful;
+        event EventHandler<TEventArgs> Successful;
     }
 }

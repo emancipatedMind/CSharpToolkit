@@ -1,57 +1,44 @@
 ﻿namespace CSharpToolkit.Logging {
     using System;
-    using System.Data;
-    using DataAccess.Abstractions;
-    using Logging.Abstractions;
-    using EventArgs;
-
+    using Abstractions;
+    using Utilities;
     /// <summary>
     /// Logs the duration of an operation.
     /// </summary>
-    public class DurationLogger : IDurationLogger {
+    public class DurationLogger {
 
-        ITimeStampLogger _logger;
-        string _separationString = " : " ;
+        ILogger _logger;
 
         /// <summary>
-        /// Instantiates DurationLogger. Uses ITimeStampLogger to perform its logging.
+        /// Instantiates DurationLogger.
         /// </summary>
-        /// <param name="logger"></param>
-        public DurationLogger(ITimeStampLogger logger) {
+        /// <param name="logger">Logger to use.</param>
+        public DurationLogger(ILogger logger) {
             _logger = logger;
-            _logger.LogOutputFailure += (s, e) => LogOutputFailure?.Invoke(this, e);
         }
 
         /// <summary>
-        /// Indicates whether Logger has faulted.
+        /// Instantiates DurationLogger.
         /// </summary>
-        public bool LoggerFaulted => _logger.LoggerFaulted;
-
-        /// <summary>
-        /// Raied to indicate logger has failed to output to destination.
-        /// </summary>
-        public event EventHandler<GenericEventArgs<Exception>> LogOutputFailure;
-
-        /// <summary>
-        /// Log Content.
-        /// </summary>
-        /// <param name="content">Content to be logged.</param>
-        public void Log(string content) => _logger.Log(content);
+        /// <param name="fileName">File name where to log.</param>
+        public DurationLogger(string fileName) : this(new Logger(fileName)) { }
 
         /// <summary>
         /// Log time metrics.
         /// </summary>
         /// <param name="operation">Operation to log time metrics of.</param>
-        public void LogTimeMetricsOf(Action operation) {
-            DateTime beginTime = LogWithCurrentTime("Operation has begun.\r\n", false);
+        /// <returns>Operation result detailing whether log was successful.</returns>
+        public OperationResult LogTimeMetricsOf(Action operation) {
+            string format = "MM/dd/yyyy HH:mm:ss.fffffff";
+            DateTime beginTime = DateTime.Now;
             operation();
-            DateTime finishTime = LogWithCurrentTime("Operation Done.\r\n", false);
-            LogWithCurrentTime($"Operation Duration : {(finishTime - beginTime).TotalMilliseconds} ms.\r\n", false);
-            _logger.Log("\r\n");
+            DateTime finishTime = DateTime.Now;
+            var messages = new string[] {
+                $"Operation begin time : {beginTime.ToString(format) }",
+                $"Operation end time : {finishTime.ToString(format) }",
+                $"Operation Duration : {(finishTime - beginTime).TotalMilliseconds} ms.\r\n",
+            };
+            return _logger.Log(string.Join("\r\n", messages));
         }
-
-        DateTime LogWithCurrentTime(string content, bool prependNewLine) =>
-            _logger.LogWithCurrentTime(content, _separationString, prependNewLine);
-
     }
 }

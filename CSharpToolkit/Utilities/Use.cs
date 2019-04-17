@@ -6,6 +6,7 @@
     /// <summary>
     /// Utility classes which provides throwaway objects.
     /// </summary>
+    [System.Diagnostics.DebuggerStepThrough]
     public static class Use {
 
         /// <summary>

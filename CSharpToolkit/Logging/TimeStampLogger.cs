@@ -1,46 +1,51 @@
 ﻿namespace CSharpToolkit.Logging {
-    using System;
     using Abstractions;
-    using EventArgs;
+    using System;
+    using Utilities;
     /// <summary>
-    /// Logs time stamps.
+    /// Logs objects with time stamps.
     /// </summary>
-    public class TimeStampLogger : ITimeStampLogger {
+    public class TimeStampLogger : ILogger {
 
+        const string DATETIMEDEFAULTFORMAT = "MM/dd/yyyy HH:mm:ss.fff";
+
+        string _dateTimeFormat;
+        string _prependageText;
         ILogger _logger;
 
+        /// <summary>
+        /// Instantiates TimeStampLogger.
+        /// </summary>
+        /// <param name="fileName">File where to log.</param>
+        public TimeStampLogger(string fileName) : this(new Logger(fileName)) { } 
+
+        /// <summary>
+        /// Instantiates TimeStampLogger.
+        /// </summary>
+        /// <param name="logger">Logger to use.</param>
         public TimeStampLogger(ILogger logger) {
             _logger = logger;
-            _logger.LogOutputFailure += (s, e) => LogOutputFailure?.Invoke(this, e);
         }
 
         /// <summary>
-        /// Indicates whether Logger has faulted.
+        /// Text to prepend to line before time.
         /// </summary>
-        public bool LoggerFaulted => _logger.LoggerFaulted;
+        public string LinePrependageText {
+            get { return _prependageText ?? ""; }
+            set { _prependageText = value; }
+        }
 
         /// <summary>
-        /// Raied to indicate logger has failed to output to destination.
+        /// The DateTime format to use. "MM/dd/yyyy HH:mm:ss.fff" is default.
         /// </summary>
-        public event EventHandler<GenericEventArgs<Exception>> LogOutputFailure;
-
-        /// <summary>
-        /// Log Content.
-        /// </summary>
-        /// <param name="content">Content to be logged.</param>
-        public void Log(string content) => _logger.Log(content);
+        public string DateTimeFormat { get {return _dateTimeFormat ?? DATETIMEDEFAULTFORMAT; } set { _dateTimeFormat = value; } }
 
         /// <summary>
         /// Logs current time.
         /// </summary>
         /// <param name="content">Content to log.</param>
-        /// <param name="dateSeparationString">Token to separate content, and date.</param>
-        /// <param name="prependNewLine">Whether a new line is prepended or not.</param>
-        /// <returns>Time which was logged.</returns>
-        public DateTime LogWithCurrentTime(string content, string dateSeparationString, bool prependNewLine) {
-            var currentTime = DateTime.Now;
-            Log($"{(prependNewLine ? "\r\n" : "")}{currentTime.ToString("MM/dd/yyyy hh:mm:ss tt")} {dateSeparationString}{content}");
-            return currentTime;
-        }
+        /// <returns>Operation result detailing whether log was successful.</returns>
+        public OperationResult Log(object content) =>
+            _logger.Log($"{LinePrependageText}{DateTime.Now.ToString(DateTimeFormat, System.Globalization.CultureInfo.InvariantCulture)} : {content}");
     }
 }

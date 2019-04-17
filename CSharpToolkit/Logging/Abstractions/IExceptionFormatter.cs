@@ -7,8 +7,8 @@
         /// <summary>
         /// Format exception into string.
         /// </summary>
-        /// <param name="ex">Exception to format.</param>
+        /// <param name="exceptions">Exception to format.</param>
         /// <returns>Exception formatted as string.</returns>
-        string FormatException(Exception ex); 
+        string FormatException(params Exception[] exceptions); 
     }
 }

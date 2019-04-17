@@ -15,6 +15,10 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,10 +48,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -58,17 +58,112 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\Abstractions\IChangeDescriptor.cs" />
+    <Compile Include="DataAccess\Abstractions\ICommunicator.cs" />
+    <Compile Include="DataAccess\Abstractions\ICommunicatorProvider.cs" />
+    <Compile Include="DataAccess\Abstractions\IDataRowProvider.cs" />
+    <Compile Include="DataAccess\Abstractions\IModifyable.cs" />
+    <Compile Include="DataAccess\Abstractions\IModifyableChangeDescriptor.cs" />
+    <Compile Include="DataAccess\Abstractions\IReadable.cs" />
+    <Compile Include="DataAccess\Abstractions\IWebDataRequestor.cs" />
+    <Compile Include="DataAccess\Abstractions\IWebDataRequestorAsync.cs" />
+    <Compile Include="DataAccess\Abstractions\IWritable.cs" />
+    <Compile Include="DataAccess\Abstractions\IXDocumentProducer.cs" />
+    <Compile Include="DataAccess\AliasedCommandTypeDataOrder.cs" />
+    <Compile Include="DataAccess\Abstractions\IAliasedCommandTypeDataOrder.cs" />
     <Compile Include="DataAccess\AliasedDataOrder.cs" />
+    <Compile Include="DataAccess\DataOperationFailedException.cs" />
+    <Compile Include="DataAccess\EmptyFileException.cs" />
     <Compile Include="DataAccess\EmptyResultSetException.cs" />
+    <Compile Include="DataAccess\NullModifyableChangeDescriptor.cs" />
+    <Compile Include="DataAccess\PropertyModification.cs" />
+    <Compile Include="DataAccess\SQL\SQLDataAccessor.cs" />
+    <Compile Include="DataAccess\SQL\SQLDataRowProvider.cs" />
+    <Compile Include="DataAccess\Web\GetAsyncWebClient.cs" />
+    <Compile Include="DataAccess\Web\GetWebClient.cs" />
+    <Compile Include="DataAccess\Web\PostAsyncWebClient.cs" />
+    <Compile Include="DataAccess\Web\PostWebClient.cs" />
+    <Compile Include="Extensions\CommunicatorExtensions.cs" />
+    <Compile Include="Extensions\DataAccessorAsyncExtensions.cs" />
+    <Compile Include="Extensions\DataAccessorExtensions.cs" />
+    <Compile Include="Extensions\ExceptionLoggerAsyncExtensions.cs" />
+    <Compile Include="Extensions\LoggerAsyncExtensions.cs" />
+    <Compile Include="Extensions\LoggerExtensions.cs" />
+    <Compile Include="Extensions\NumericExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\UtilityExtensions.cs" />
+    <Compile Include="Extensions\WebRequestorExtensions.cs" />
+    <Compile Include="Logging\Abstractions\IEmailLoggerAsync.cs" />
+    <Compile Include="Logging\FileEmailLogger.cs" />
+    <Compile Include="Logging\NullExceptionLogger.cs" />
+    <Compile Include="Logging\NullFileNameSwappableLogger.cs" />
+    <Compile Include="Logging\NullWebDataRequestorAsync.cs" />
+    <Compile Include="Logging\ExceptionLoggerNotifyingDecorator.cs" />
+    <Compile Include="Logging\SMTPEmailLogger.cs" />
+    <Compile Include="Logging\EmailReceipients.cs" />
+    <Compile Include="Logging\Abstractions\IEmailLogger.cs" />
+    <Compile Include="Logging\NullLogger.cs" />
+    <Compile Include="Logging\SQLLoggingDataAccessor.cs" />
+    <Compile Include="Logging\UnableToLogException.cs" />
+    <Compile Include="Logging\WebDataRequestorAsyncLogger.cs" />
+    <Compile Include="Logging\WebDataRequestorLogger.cs" />
     <Compile Include="Utilities\Abstractions\IAlias.cs" />
     <Compile Include="DataAccess\Abstractions\IAliasedDataOrder.cs" />
-    <Compile Include="DataAccess\Abstractions\ICachedTableProvider.cs" />
-    <Compile Include="DataAccess\Abstractions\IDataOperator.cs" />
-    <Compile Include="DataAccess\Abstractions\IDataReaderAccessor.cs" />
-    <Compile Include="DataAccess\Abstractions\IDataRowProvider.cs" />
+    <Compile Include="DataAccess\Abstractions\IDataAccessor.cs" />
     <Compile Include="DataAccess\Abstractions\ISimpleDataOrder.cs" />
+    <Compile Include="Utilities\Abstractions\IAliasedCommandTypeDataOrderFormatter.cs" />
+    <Compile Include="Utilities\Abstractions\IExporter.cs" />
+    <Compile Include="Utilities\Abstractions\IIdProvider.cs" />
+    <Compile Include="Utilities\Abstractions\IImport.cs" />
+    <Compile Include="Utilities\Abstractions\IAsyncImporterWithResult.cs" />
+    <Compile Include="Utilities\Abstractions\IImporterWithResult.cs" />
+    <Compile Include="Utilities\Abstractions\IJoinType.cs" />
+    <Compile Include="Utilities\Abstractions\ILocker.cs" />
+    <Compile Include="Utilities\Abstractions\ILockStatusProvider.cs" />
+    <Compile Include="Utilities\Abstractions\INavigation.cs" />
+    <Compile Include="Utilities\Abstractions\INotifyDisposable.cs" />
+    <Compile Include="Utilities\Abstractions\IInitializable.cs" />
+    <Compile Include="Utilities\Abstractions\IStateChanged.cs" />
+    <Compile Include="Utilities\AggregatedLockers.cs" />
     <Compile Include="Utilities\Alias.cs" />
+    <Compile Include="Utilities\Aliaser.cs" />
+    <Compile Include="Utilities\Exceptions\EmptyFileException.cs" />
+    <Compile Include="Utilities\ExtendedNavigator.cs" />
+    <Compile Include="Utilities\EventArgs\DualLockEventArgs.cs" />
+    <Compile Include="Utilities\EventArgs\StateChangeEventArgs.cs" />
+    <Compile Include="Utilities\Formatters\CityStateZipFormatter.cs" />
+    <Compile Include="Utilities\Formatters\ConcatenateWithHyphenFormatter.cs" />
+    <Compile Include="Utilities\Formatters\ConcatenateWithStringFormatter.cs" />
+    <Compile Include="Utilities\Formatters\NameExtensionFormatter.cs" />
+    <Compile Include="Utilities\Formatters\NameFormatter.cs" />
+    <Compile Include="Utilities\Formatters\FirstLegalTextFormatter.cs" />
+    <Compile Include="Utilities\Formatters\PhoneNumberFormatter.cs" />
+    <Compile Include="Utilities\Formatters\RegExFormatter.cs" />
+    <Compile Include="Utilities\Formatters\TSqlFormatter.cs" />
+    <Compile Include="Utilities\Formatters\ZipCodeFormatter.cs" />
+    <Compile Include="Utilities\Abstractions\IExtendedNavigator.cs" />
+    <Compile Include="Utilities\LockerProxy.cs" />
+    <Compile Include="Utilities\LockStatus.cs" />
+    <Compile Include="Utilities\Locker.cs" />
+    <Compile Include="Utilities\JoinType.cs" />
+    <Compile Include="Utilities\NullNavigator.cs" />
+    <Compile Include="Utilities\NullSynchronizationException.cs" />
+    <Compile Include="Utilities\SafeReferenceLockerDecorator.cs" />
+    <Compile Include="Utilities\SelectQuery.cs" />
+    <Compile Include="Utilities\SelectQueryBuildOptions.cs" />
+    <Compile Include="Utilities\SelectQueryOrder.cs" />
+    <Compile Include="Validation\CallbackValidator.cs" />
+    <Compile Include="Validation\EmailAddressValidator.cs" />
+    <Compile Include="Validation\MinimalSQLInjectionValidator.cs" />
+    <Compile Include="Validation\NullValidator.cs" />
+    <Compile Include="Validation\RangeDataOrder.cs" />
+    <Compile Include="Validation\RequiredValidator.cs" />
+    <Compile Include="Validation\NumericRangeValidator.cs" />
+    <Compile Include="Validation\SQLInjectionValidatorWithSingleDashes.cs" />
     <Compile Include="Validation\ValidationFailedException.cs" />
+    <Compile Include="XAML\Abstractions\IApplicationProxy.cs" />
+    <Compile Include="XAML\Abstractions\IBindablePassword.cs" />
+    <Compile Include="XAML\Abstractions\IExplicitErrorAdder.cs" />
     <Compile Include="XAML\Abstractions\IDialogControl.cs" />
     <Compile Include="XAML\Abstractions\IDialogSignaler.cs" />
     <Compile Include="Utilities\Abstractions\IReflectionOperation.cs" />
@@ -78,86 +173,86 @@
     <Compile Include="Logging\Abstractions\IDurationLogger.cs" />
     <Compile Include="Logging\Abstractions\IExceptionFormatter.cs" />
     <Compile Include="Logging\Abstractions\IExceptionLogger.cs" />
-    <Compile Include="Logging\Abstractions\IFileNameSwappable.cs" />
+    <Compile Include="Utilities\Abstractions\IFileNameSwappable.cs" />
     <Compile Include="Logging\Abstractions\IFileNameSwappableLogger.cs" />
     <Compile Include="Logging\Abstractions\ILoggable.cs" />
     <Compile Include="Logging\Abstractions\ILogger.cs" />
     <Compile Include="Logging\Abstractions\ITimeStampLogger.cs" />
     <Compile Include="Utilities\Abstractions\Urgency.cs" />
-    <Compile Include="Algorithms\BoyerMoore.cs" />
-    <Compile Include="Algorithms\PeriodicMethodInvoker.cs" />
-    <Compile Include="Algorithms\RunsLessThanSeed.cs" />
-    <Compile Include="Algorithms\SeedLessThanRuns.cs" />
     <Compile Include="Algorithms\SequenceChecker.cs" />
     <Compile Include="Algorithms\SequenceSeeker.cs" />
-    <Compile Include="DataAccess\CachedTableProvider.cs" />
     <Compile Include="DataAccess\Clause.cs" />
     <Compile Include="DataAccess\ClauseType.cs" />
     <Compile Include="DataAccess\DataRowWrapper.cs" />
-    <Compile Include="DataAccess\DisconnectedDataReaderAccessor.cs" />
-    <Compile Include="DataAccess\Error\DataReader.cs" />
-    <Compile Include="DataAccess\Error\HandlingDataAccessor.cs" />
     <Compile Include="DataAccess\SimpleDataOrder.cs" />
-    <Compile Include="Logging\LoggingDataAccessor.cs" />
-    <Compile Include="DataAccess\SQL\ConnectedDataReaderAccessor.cs" />
-    <Compile Include="DataAccess\SQL\SQLDataRowProvider.cs" />
-    <Compile Include="DataAccess\Test\DataReaderStub.cs" />
-    <Compile Include="DataAccess\ThreadLockDataAccessor.cs" />
     <Compile Include="Logging\ExceptionFormatter.cs" />
     <Compile Include="Logging\ExceptionLogger.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\DurationLogger.cs" />
-    <Compile Include="Logging\ExceptionLoggingDataRowProvider.cs" />
     <Compile Include="Logging\TimeStampLogger.cs" />
-    <Compile Include="DataAccess\Null\DataReaderAccessor.cs" />
-    <Compile Include="DataAccess\Test\DataReaderAccessorStub.cs" />
     <Compile Include="Utilities\Decode.cs" />
     <Compile Include="Utilities\Get.cs" />
     <Compile Include="Utilities\OperationResult.cs" />
     <Compile Include="Utilities\Perform.cs" />
     <Compile Include="Utilities\Use.cs" />
     <Compile Include="Console\Menu.cs" />
-    <Compile Include="Diagnostics\RandomDataGenerator.cs" />
-    <Compile Include="Diagnostics\ReflectionServices.cs" />
-    <Compile Include="Console\BarDrawerByPercentage.cs" />
-    <Compile Include="Console\ConsoleBarDrawer.cs" />
-    <Compile Include="EventArgs\ActionEventArgs.cs" />
-    <Compile Include="EventArgs\DataCollectionEventArgs.cs" />
-    <Compile Include="EventArgs\GenericCollectionEventArgs.cs" />
-    <Compile Include="EventArgs\GenericEventArgs.cs" />
+    <Compile Include="Utilities\EventArgs\DataCollectionEventArgs.cs" />
+    <Compile Include="Utilities\EventArgs\GenericEventArgs.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Factories\PeriodicMethodInvokerFactory.cs" />
-    <Compile Include="Geometry\AngleConversions.cs" />
-    <Compile Include="Geometry\ThreeDLineSegment.cs" />
-    <Compile Include="Geometry\ThreeDPoint.cs" />
-    <Compile Include="Geometry\TwoDLineSegment.cs" />
-    <Compile Include="Geometry\TwoDPoint.cs" />
-    <Compile Include="Utilities\Operations.cs" />
     <Compile Include="Validation\SQLInjectionValidator.cs" />
+    <Compile Include="XAML\Abstractions\IListItemConverter.cs" />
     <Compile Include="XAML\AwaitableDelegateCommand.cs" />
+    <Compile Include="XAML\AwaitableDelegateCommandBase.cs" />
+    <Compile Include="XAML\Behaviors\DataGridBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\DependencyPropertyBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\ExplicitErrorAddingBehavior.cs" />
+    <Compile Include="XAML\Behaviors\GridViewSort.cs" />
+    <Compile Include="XAML\Behaviors\InputKeyRestrictor.cs" />
+    <Compile Include="XAML\Behaviors\NullListItemConverter.cs" />
+    <Compile Include="XAML\Behaviors\PasswordBoxBehavior.cs" />
+    <Compile Include="XAML\Behaviors\SelectorBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\SortGlyphAdorner.cs" />
+    <Compile Include="XAML\Behaviors\TwoListSynchronizer.cs" />
+    <Compile Include="XAML\Behaviors\UIElementBehaviors.cs" />
+    <Compile Include="XAML\BindablePasswordViewModel.cs" />
+    <Compile Include="XAML\Converters\AlternatingRowColorConverter.cs" />
+    <Compile Include="XAML\Converters\BooleanANDConverter.cs" />
+    <Compile Include="XAML\Converters\BooleanORConverter.cs" />
     <Compile Include="XAML\Converters\BooleanNotConverter.cs" />
     <Compile Include="XAML\Behaviors\CloseBehavior.cs" />
     <Compile Include="Extensions\CommandExtensions.cs" />
-    <Compile Include="XAML\CustomCollection.cs" />
+    <Compile Include="XAML\Converters\DateConverter.cs" />
+    <Compile Include="XAML\Converters\DecimalNumericCoercerConverter.cs" />
+    <Compile Include="XAML\Converters\DisplayConverter.cs" />
+    <Compile Include="XAML\Converters\EnumBooleanConverter.cs" />
+    <Compile Include="XAML\Converters\FilterConverter.cs" />
+    <Compile Include="XAML\Converters\FormattingMultiConverter.cs" />
+    <Compile Include="XAML\Converters\FormattingSingleConverter.cs" />
+    <Compile Include="XAML\Converters\NullableIntToBool.cs" />
+    <Compile Include="XAML\Converters\NullIfEmptyStringConverter.cs" />
+    <Compile Include="XAML\Converters\NullIfZeroConverter.cs" />
+    <Compile Include="XAML\Converters\NumericCoercerConverter.cs" />
+    <Compile Include="XAML\Converters\TimeConverter.cs" />
+    <Compile Include="XAML\Converters\ValuesToBoolConverter.cs" />
+    <Compile Include="XAML\Converters\YearConverter.cs" />
     <Compile Include="XAML\DelegateCommand.cs" />
     <Compile Include="XAML\Behaviors\DialogSignalerEnvironment.cs" />
     <Compile Include="XAML\DoubleClickListView.cs" />
     <Compile Include="XAML\DoubleClickListViewItem.cs" />
     <Compile Include="XAML\EntityBase.cs" />
-    <Compile Include="XAML\EnumBindingSourceExtension.cs" />
+    <Compile Include="XAML\Extensions\XAMLExtensions.cs" />
+    <Compile Include="XAML\ListViewItemWithSlide.cs" />
+    <Compile Include="XAML\ListViewWithSlide.cs" />
+    <Compile Include="XAML\MarkupExtensions\EnumBindingSourceExtension.cs" />
     <Compile Include="XAML\Converters\EnumDescriptionTypeConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XAML\Abstractions\IAsyncCommand.cs" />
-    <Compile Include="XAML\Abstractions\IEntityBase.cs" />
     <Compile Include="XAML\Abstractions\IRaiseCanExecuteChanged.cs" />
     <Compile Include="XAML\Converters\IsNullConverter.cs" />
     <Compile Include="XAML\Converters\ColorToSolidBrushConverter.cs" />
     <Compile Include="XAML\Converters\SolidBrushToColorConverter.cs" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -2,16 +2,18 @@
     using System;
     using System.Threading.Tasks;
     using System.Windows.Input;
+    using Utilities.EventArgs;
     using Abstractions;
     /// <summary>
     /// Creates awaitable generic command that accepts object of type object as first parameter.
     /// </summary>
     public class AwaitableDelegateCommand : AwaitableDelegateCommand<object>, IAsyncCommand {
+
         /// <summary>
         /// Creates awaitable generic command that accepts object of type object as first parameter.
         /// </summary>
         /// <param name="executeMethod">Method to run when command is invoked</param>
-        public AwaitableDelegateCommand(Func<Task> executeMethod) 
+        public AwaitableDelegateCommand(Func<Task> executeMethod)
             : base(o => executeMethod()) { }
 
         /// <summary>
@@ -19,14 +21,14 @@
         /// </summary>
         /// <param name="executeMethod">Method to run when command is invoked.</param>
         /// <param name="canExecuteMethod">Method to determine if command can be run.</param>
-        public AwaitableDelegateCommand(Func<Task> executeMethod, Func<bool> canExecuteMethod) 
+        public AwaitableDelegateCommand(Func<Task> executeMethod, Func<bool> canExecuteMethod)
             : base(o => executeMethod(), o => canExecuteMethod()) { }
     }
 
     /// <summary>
     /// Creates awaitable generic command that accepts object of type T as first parameter.
     /// </summary>
-    public class AwaitableDelegateCommand<T> : IAsyncCommand<T>, ICommand {
+    public class AwaitableDelegateCommand<T> : AwaitableDelegateCommandBase, IAsyncCommand<T>, ICommand {
         private readonly Func<T, Task> _executeMethod;
         private readonly DelegateCommand<T> _underlyingCommand;
         private bool _isExecuting;
@@ -55,29 +57,35 @@
         /// <returns>Object which represents asynchronous operation.</returns>
         public async Task ExecuteAsync(T obj) {
             try {
-                _isExecuting = true;
-                RaiseCanExecuteChanged();
-                await _executeMethod(obj);
+                try {
+                    _isExecuting = true;
+                    RaiseCanExecuteChanged();
+                    await _executeMethod(obj);
+                }
+                finally {
+                    _isExecuting = false;
+                    RaiseCanExecuteChanged();
+                }
             }
-            finally {
-                _isExecuting = false;
-                RaiseCanExecuteChanged();
+            catch (Exception ex) {
+                bool handled = OnUnHandledException(this, ex);
+                if (handled == false)
+                    throw;
             }
         }
 
         /// <summary>
         /// This command.
         /// </summary>
-        public ICommand Command { get { return this; } }
+        public ICommand Command => this;
 
         /// <summary>
         /// Determines whether or not command can run.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>Bool representing whether command can run(True) or not(False).</returns>
-        public bool CanExecute(object parameter) {
-            return !_isExecuting && _underlyingCommand.CanExecute((T)parameter);
-        }
+        public bool CanExecute(object parameter) =>
+            !_isExecuting && _underlyingCommand.CanExecute((T)parameter);
 
         /// <summary>
         /// Raised anytime CanExecute has changed.
@@ -91,15 +99,13 @@
         /// Executes command.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
-        public async void Execute(object parameter) {
+        public async void Execute(object parameter) =>
             await ExecuteAsync((T)parameter);
-        }
 
         /// <summary>
         /// Fire CanExecuteChanged event.
         /// </summary>
-        public void RaiseCanExecuteChanged() {
+        public void RaiseCanExecuteChanged() =>
             _underlyingCommand.RaiseCanExecuteChanged();
-        }
     }
 }

@@ -1,29 +1,22 @@
 ﻿namespace CSharpToolkit.XAML.Behaviors {
     using Abstractions;
+    using Extensions;
     using System;
     using System.Linq;
     using System.Reflection;
     using System.Windows;
     /// <summary>
     /// A behavior used by windows to participate in dialog operations. DataContext of window must implement
-    /// CSharpToolkit.Abstractions.DialogControl in order to use this behavior.
+    /// CSharpToolkit.Abstractions.IDialogControl in order to use this behavior.
     /// </summary>
     public class CloseBehavior {
-
-        /// <summary>
-        /// YieldDialogControl's getter method.
-        /// </summary>
-        /// <param name="obj">Object for which property is requested.</param>
-        /// <returns>YieldDialogControl's status. Whether or not the window is participating in this behavior.</returns>
-        public static bool GetYieldDialogControl(DependencyObject obj) =>
-            (bool)obj.GetValue(YieldDialogControlProperty);
 
         /// <summary>
         /// YieldDialogControl's setter method.
         /// </summary>
         /// <param name="obj">Object for which property is requested.</param>
         /// <param name="value">New value for YieldDialogControl.</param>
-        public static void SetYieldDialogControl(DependencyObject obj, bool value) =>
+        public static void SetYieldDialogControl(Window obj, bool value) =>
             obj.SetValue(YieldDialogControlProperty, value);
 
         /// <summary>
@@ -38,7 +31,11 @@
                 );
 
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (ArgumentsAreInvalid(d, e)) return;
+            bool argumentsAreInvalid =
+                (d is Window && e.NewValue is bool) == false;
+
+            if (argumentsAreInvalid)
+                return;
 
             var window = (Window)d;
             var newValue = (bool)e.NewValue;
@@ -74,21 +71,24 @@
             Type environmentType = typeof(DialogSignalerEnvironment<>)
                 .MakeGenericType(dialogControlInterface.GenericTypeArguments);
 
+            // Begin Critical Section.
+            // Defining this section in loops or anything like that seems to result in errors due to references not passed properly.
+            EventInfo successfulEvent = environmentType.GetEvent(nameof(DialogSignalerEnvironment<EventArgs>.Successful));
             EventInfo cancelEvent = environmentType.GetEvent(nameof(DialogSignalerEnvironment<EventArgs>.Cancelled));
             EventInfo dialogClosedEvent = environmentType.GetEvent(nameof(DialogSignalerEnvironment<EventArgs>.DialogClosed));
-            EventInfo successfulEvent = environmentType.GetEvent(nameof(DialogSignalerEnvironment<EventArgs>.Successful));
 
-            Delegate cancelDelegate =
-                Delegate.CreateDelegate(cancelEvent.EventHandlerType, null, new EventHandler(CleanupWindow).Method);
             Delegate successfulDelegate =
                 Delegate.CreateDelegate(successfulEvent.EventHandlerType, null, new EventHandler(CleanupWindow).Method);
+            Delegate cancelDelegate =
+                Delegate.CreateDelegate(cancelEvent.EventHandlerType, null, new EventHandler(CleanupWindow).Method);
             Delegate dialogClosedDelegate =
                 Delegate.CreateDelegate(dialogClosedEvent.EventHandlerType, null, new EventHandler(DialogClosed_Closed).Method);
 
             object environment = Activator.CreateInstance(environmentType, new object[] { e.NewValue, sender });
-            cancelEvent.AddEventHandler(environment, cancelDelegate);
             successfulEvent.AddEventHandler(environment, successfulDelegate);
+            cancelEvent.AddEventHandler(environment, cancelDelegate);
             dialogClosedEvent.AddEventHandler(environment, dialogClosedDelegate);
+            // End Critical Section.
         }
 
         private static void CleanupWindow(object sender, EventArgs e) {
@@ -109,15 +109,12 @@
             PropertyInfo cancelCommandProperty = controller.GetType().GetProperty(nameof(IDialogControl<EventArgs>.Cancel));
             var cancelCommand = cancelCommandProperty.GetValue(controller);
 
-            MethodInfo executeMethod = typeof(DelegateCommand).GetMethod(nameof(DelegateCommand.Execute));
+            MethodInfo executeMethod = typeof(System.Windows.Input.ICommand).GetMethod(nameof(System.Windows.Input.ICommand.Execute));
             if (sender is IDisposable)
                 ((IDisposable)sender).Dispose();
 
             executeMethod.Invoke(cancelCommand, new object[] { new object() });
         }
-
-        private static bool ArgumentsAreInvalid(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            (d is Window && e.NewValue is bool) == false;
 
     }
 }

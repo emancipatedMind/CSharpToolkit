@@ -4,12 +4,12 @@
     using System.Linq;
     using System.Text;
     /// <summary>
-    /// Used to check if current position matches a sequence.
+    /// Used to check if a certain position matches a sequence.
     /// </summary>
     public class SequenceChecker {
 
         /// <summary>
-        /// Bytes to be matched.
+        /// Bytes to be matched. '\r\n' by default. 
         /// </summary>
         public byte[] Sequence { get; set; } = Encoding.ASCII.GetBytes("\r\n");
 
