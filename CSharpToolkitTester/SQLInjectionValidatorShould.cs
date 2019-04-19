@@ -2,6 +2,7 @@
     using System.Collections.Generic;
     using System;
     using NUnit.Framework;
+    using CSharpToolkit.Extensions;
     [TestFixture]
     public class SQLInjectionValidatorShould {
         static CSharpToolkit.Validation.SQLInjectionValidator _validator = new CSharpToolkit.Validation.SQLInjectionValidator();
@@ -37,19 +38,6 @@
         public void FailIfContainsOddNumberOfQuotesAndSingleQuotesDisallowed() {
             var order = "1st'''";
             TestFailure(new string[] { order }, false);
-        }
-
-        [Test]
-        public void FailIfFailureAmongSuccesses() {
-            var parameters = new string[] {
-                "",
-                "--1st",
-                "1st",
-                "Anchors",
-                "123456789",
-            };
-            TestFailure(parameters, false);
-            TestFailure(parameters, true);
         }
 
         [Test]
@@ -89,9 +77,8 @@
         }
 
         [Test]
-        public void PassIfContainsSingleQuotesIfRequested() {
+        public void PassIfContainsSingleQuotesIfRequested() =>
             TestPass(new string[] { "'1st'" }, true);
-        }
 
         [Test]
         public void PassIfContainsMultiplePassingParametrs() {
@@ -105,6 +92,22 @@
             TestPass(parameters);
         }
 
+        [Test]
+        public void PassIfContainsCommercialAtSymbol() =>
+            TestPass(new string[] { "1st@2nd" }, true);
+
+        [Test]
+        public void PassIfContainsComma() =>
+            TestPass(new string[] { "1st,2nd" }, true);
+
+        [Test]
+        public void PassIfContainsPeriod() =>
+            TestPass(new string[] { "1st.2nd" }, true);
+
+        [Test]
+        public void PassIfContainsSpace() =>
+            TestPass(new string[] { "1st 2nd" }, true);
+
         void TestPass(IEnumerable<string> parameters, bool allowSingleQuotes = false) =>
             RunTestOnValidator(parameters, Assert.IsTrue, Assert.IsFalse, allowSingleQuotes);
 
@@ -113,9 +116,11 @@
 
         void RunTestOnValidator(IEnumerable<string> parameters, Action<bool> WasSuccessfulWrapper, Action<bool> HadErrorsWrapper, bool allowSingleQuotes) {
             _validator.AllowSingleQuotes = allowSingleQuotes;
-            var result = _validator.Validate(parameters);
-            WasSuccessfulWrapper(result.WasSuccessful);
-            HadErrorsWrapper(result.HadErrors);
+            parameters.ForEach(p => {
+                var result = _validator.Validate(p);
+                WasSuccessfulWrapper(result.WasSuccessful);
+                HadErrorsWrapper(result.HadErrors);
+            });
         }
 
     }

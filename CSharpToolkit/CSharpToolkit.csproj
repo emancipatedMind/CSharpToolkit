@@ -91,6 +91,7 @@
     <Compile Include="Extensions\LoggerExtensions.cs" />
     <Compile Include="Extensions\NumericExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\UtilityExtensions.cs" />
     <Compile Include="Extensions\WebRequestorExtensions.cs" />
     <Compile Include="Logging\Abstractions\IEmailLoggerAsync.cs" />
