@@ -238,6 +238,7 @@
     <Compile Include="XAML\Converters\YearConverter.cs" />
     <Compile Include="XAML\DelegateCommand.cs" />
     <Compile Include="XAML\Behaviors\DialogSignalerEnvironment.cs" />
+    <Compile Include="XAML\DialogViewModel.cs" />
     <Compile Include="XAML\DoubleClickListView.cs" />
     <Compile Include="XAML\DoubleClickListViewItem.cs" />
     <Compile Include="XAML\EntityBase.cs" />
