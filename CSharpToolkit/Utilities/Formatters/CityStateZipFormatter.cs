@@ -26,21 +26,11 @@
         }
 
         /// <summary>
-        /// Formats city, state, and zip into a single line.
-        /// </summary>
-        /// <param name="city"></param>
-        /// <param name="state"></param>
-        /// <param name="zip"></param>
-        /// <returns></returns>
-        public string FormatCityStateZip(string city, string state, string zip) =>
-            Format(new[] { city, state, zip });
-
-        /// <summary>
         /// The formatter used to format the zip code.
         /// </summary>
-        public IStringFormatter ZipCodeFormatter { get; set; } = new ZipCodeFormatter();
+        public IStringFormatter ZipCodeFormatter { get; set; } = Formatters.ZipCodeFormatter.Instance;
 
-        private string TestAndCombine(string input, string secondInput, string proposedJoinString) {
+        static string TestAndCombine(string input, string secondInput, string proposedJoinString) {
 
             string actualJoinString =
                 string.IsNullOrWhiteSpace(input) == false && string.IsNullOrWhiteSpace(secondInput) == false ?

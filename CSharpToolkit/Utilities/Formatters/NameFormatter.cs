@@ -6,6 +6,11 @@
     /// </summary>
     public class NameFormatter : IStringFormatter {
 
+        static NameFormatter _instance;
+        public static NameFormatter Instance => _instance ?? (_instance = new NameFormatter());
+
+        NameFormatter() { }
+
         /// <summary>
         /// Expects two arguments. Ignores others. Used to format names.
         /// </summary>
@@ -28,13 +33,5 @@
             return string.IsNullOrWhiteSpace(name) ? "" : name;
         }
 
-        /// <summary>
-        /// Used to format names by combining with a white space.
-        /// </summary>
-        /// <param name="firstName"></param>
-        /// <param name="lastName"></param>
-        /// <returns>If both names are null, empty or whitespace, returns string.Empty. If last name is missing, just returns first name. If both are present, combines with a whitespace.</returns>
-        public string FormatName(string firstName, string lastName) =>
-            Format(new[] { firstName, lastName });
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace CSharpToolkit.Utilities.Formatters {
     using Abstractions;
+    using Extensions;
     using System.Linq;
     /// <summary>
     /// Concatenates strings together using a Link.
@@ -12,7 +13,7 @@
         /// <param name="text">Text to format.</param>
         /// <returns>Inputs concatenated with Link.</returns>
         public string Format(params string[] text) {
-            var formattedInputs = text.Where(t => string.IsNullOrWhiteSpace(t) == false);
+            var formattedInputs = text.Where(t => t.IsMeaningful());
             return string.Join(Link ?? "", formattedInputs);
         }
 

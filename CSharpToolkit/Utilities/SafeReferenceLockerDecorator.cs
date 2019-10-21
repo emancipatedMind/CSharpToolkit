@@ -6,10 +6,10 @@
     /// <summary>
     /// This decorator marshals all requests to <see cref="Component"/>. The functionality given is that this decorator is always safe to call, and gives caller one instance to call.
     /// </summary>
-    public class SafeReferenceLockerDecorator : ILocker, IDisposable {
+    public class SafeReferenceLockerDecorator : ILocker {
 
         Locker DefaultLocker = new Locker();
-
+        bool _disposed = false; // To detect redundant calls
         ILocker _component;
 
         /// <summary>
@@ -65,39 +65,20 @@
         public void RequestUnlock(object token) => _component?.RequestUnlock(token);
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
         protected virtual void Dispose(bool disposing) {
-            if (!disposedValue) {
+            if (!_disposed) {
                 if (disposing) {
-                    // TODO: dispose managed state (managed objects).
+                    Component = null;
+                    DefaultLocker.Dispose();
+                    LockStatusChanged?.Invoke(this, new GenericEventArgs<LockStatus>(LockStatus.Free));
+                    LockStatusChanged = null;
                 }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                Component.LockStatusChanged -= Component_LockStatusChanged;
-
-                disposedValue = true;
+                _disposed = true;
             }
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~SafeReferenceLockerDecorator() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose() {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
+        public void Dispose() => Dispose(true);
         #endregion
-
-
 
     }
 }

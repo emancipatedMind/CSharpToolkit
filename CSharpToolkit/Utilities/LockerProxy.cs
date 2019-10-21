@@ -2,10 +2,14 @@
     using System;
     using Abstractions;
     using EventArgs;
+    using System.Collections.Generic;
 
-    public class LockerProxy : ILocker, IDisposable {
+    public class LockerProxy : ILocker {
+        static Func<LockStatus> DefaultCurrentStatusCallback = new Func<LockStatus>(() => LockStatus.Free);
 
+        bool _disposed = false;
         Func<LockStatus> _currentStatusCallback;
+        List<object> _tokens = new List<object>();
 
         public LockStatus CurrentStatus => CurrentStatusCallback();
 
@@ -13,14 +17,22 @@
         public event EventHandler<GenericEventArgs<object>> LockRequested;
         public event EventHandler<GenericEventArgs<object>> UnLockRequested;
 
-        public void RequestLock(object token) =>
+        public void RequestLock(object token) {
+            if (_disposed)
+                return;
+            _tokens.Add(token);
             LockRequested?.Invoke(this, new GenericEventArgs<object>(token));
+        }
 
-        public void RequestUnlock(object token) =>
+        public void RequestUnlock(object token) {
+            if (_disposed)
+                return;
             UnLockRequested?.Invoke(this, new GenericEventArgs<object>(token));
+            _tokens.Remove(token);
+        }
 
         public Func<LockStatus> CurrentStatusCallback {
-            get { return _currentStatusCallback ?? new Func<LockStatus>(() => LockStatus.Free); }
+            get { return _currentStatusCallback ?? DefaultCurrentStatusCallback; }
             set { _currentStatusCallback = value; }
         }
 
@@ -28,40 +40,23 @@
             LockStatusChanged?.Invoke(this, new GenericEventArgs<LockStatus>(status));
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
         protected virtual void Dispose(bool disposing) {
-            if (!disposedValue) {
+            if (!_disposed) {
                 if (disposing) {
-                    // TODO: dispose managed state (managed objects).
+                    _tokens.ForEach(token => UnLockRequested?.Invoke(this, new GenericEventArgs<object>(token)));
+                    UnLockRequested = null;
+                    LockStatusChanged = null;
+                    LockRequested = null;
+                    _currentStatusCallback = null;
+                    _tokens.Clear();
+                    _tokens = null;
                 }
-
-                LockStatusChanged = null;
-                LockRequested = null;
-                UnLockRequested = null;
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
+                _disposed = true;
             }
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~LockerProxy() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose() {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
+        public void Dispose() => Dispose(true);
         #endregion
-
 
     }
 }

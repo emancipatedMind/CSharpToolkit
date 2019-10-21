@@ -12,9 +12,11 @@
         /// </summary>
         void Reset();
         /// <summary>
-        /// Reset the data using a name.
+        /// Reset a specific property.
         /// </summary>
-        void Reset(string name);
+        /// <param name="name">Property name to change.</param>
+        /// <returns>Whether property was reset.</returns>
+        bool Reset(string name);
         /// <summary>
         /// Whether any changes exist since last Save/Reset.
         /// </summary>

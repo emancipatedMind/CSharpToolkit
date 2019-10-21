@@ -39,14 +39,23 @@
 
             var window = (Window)d;
             var newValue = (bool)e.NewValue;
+
+            var environment = GetEnvironment(window);
+
             if (newValue) {
-                window.DataContextChanged += Window_DataContextChanged;
-                window.Closed += RemoveEvents;
+                if (environment == null) {
+                    window.DataContextChanged += Window_DataContextChanged;
+                    window.Closed += RemoveEvents;
+                    Window_DataContextChanged(window, new DependencyPropertyChangedEventArgs(FrameworkElement.DataContextProperty, null, window.DataContext));
+                }
             }
             else {
                 window.DataContextChanged -= Window_DataContextChanged;
                 window.Closed -= RemoveEvents;
+                (environment as IDisposable)?.Dispose();
+                SetEnvironment(window, null);
             }
+
         }
 
         private static void RemoveEvents(object sender, EventArgs e) {
@@ -60,6 +69,9 @@
         private static void Window_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) {
             Type dataContextType = e.NewValue?.GetType();
             if (sender is Window == false || dataContextType == null) return;
+            var window = (Window)sender;
+
+            (GetEnvironment(window) as IDisposable)?.Dispose();
 
             Type dialogControlInterface =
                 dataContextType
@@ -89,6 +101,8 @@
             cancelEvent.AddEventHandler(environment, cancelDelegate);
             dialogClosedEvent.AddEventHandler(environment, dialogClosedDelegate);
             // End Critical Section.
+
+            SetEnvironment((Window)sender, environment);
         }
 
         private static void CleanupWindow(object sender, EventArgs e) {
@@ -115,6 +129,18 @@
 
             executeMethod.Invoke(cancelCommand, new object[] { new object() });
         }
+
+        public static object GetEnvironment(DependencyObject obj) {
+            return (object)obj.GetValue(EnvironmentProperty);
+        }
+
+        public static void SetEnvironment(DependencyObject obj, object value) {
+            obj.SetValue(EnvironmentProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for Environment.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty EnvironmentProperty =
+            DependencyProperty.RegisterAttached("Environment", typeof(object), typeof(CloseBehavior), new PropertyMetadata(null));
 
     }
 }

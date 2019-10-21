@@ -198,7 +198,7 @@
                 if (selector is MultiSelector)
                     return ((MultiSelector)selector).SelectedItems;
                 if (selector is ListBox)
-                    return ((MultiSelector)selector).SelectedItems;
+                    return ((ListBox)selector).SelectedItems;
                 throw new InvalidOperationException("Target object has no SelectedItems property to bind.");
             }
         }

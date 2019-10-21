@@ -1,4 +1,5 @@
 ﻿namespace CSharpToolkit.DataAccess.SQL {
+    using Extensions;
     using System.Linq;
     using System.Collections.Generic;
     using System.Data;
@@ -81,7 +82,14 @@
                     CommandText = sql,
                     CommandType = commandType
                 };
-                command.Parameters.AddRange(parameters.Select(p => new SqlParameter(p.Key, p.Value ?? DBNull.Value)).ToArray());
+                command.Parameters.AddRange(
+                    parameters.Select(p => {
+                        var parameter = new SqlParameter(p.Key, p.Value ?? DBNull.Value);
+                        if (p.Value is string)
+                            parameter.DbType = DbType.AnsiString;
+                        return parameter;
+                    }).ToArray()
+                );
 
                 using (var connection = new SqlConnection(_connectionString)) {
                     command.Connection = connection;

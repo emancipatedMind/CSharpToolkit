@@ -15,7 +15,7 @@
             Utilities.Get.Substring(input, startIndex, length);
 
         /// <summary>
-        /// Determines whether a string is valid which is the inverse of <see cref="System.String.IsNullOrEmpty(string)"/> == false.
+        /// Determines whether a string is valid which is the inverse of <see cref="System.String.IsNullOrEmpty(string)"/>.
         /// </summary>
         /// <param name="input">The string to check.</param>
         /// <returns>Whether string is valid.</returns>

@@ -12,6 +12,12 @@
         public SimpleDataOrder() : this (string.Empty, new KeyValuePair<string, object>[0]) { }
 
         /// <summary>
+        /// Creates a data order containing a query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        public SimpleDataOrder(string query) : this (query, new KeyValuePair<string, object>[0]) { }
+
+        /// <summary>
         /// Creates a data order containing a query, and its parameters.
         /// </summary>
         /// <param name="query">The query.</param>

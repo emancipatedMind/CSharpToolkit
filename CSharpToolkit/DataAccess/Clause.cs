@@ -42,11 +42,11 @@
             Func<string, string> clauseWrapper = s => s;
             switch (_type) {
                 case ClauseType.AND:
-                    clauseLink = "\r\nAND";
+                    clauseLink = $"{Environment.NewLine}AND";
                     break;
                 case ClauseType.OR:
-                    clauseLink = "\r\n    OR";
-                    clauseWrapper = s => $"(\r\n    {s}\r\n)";
+                    clauseLink = $"{Environment.NewLine}    OR";
+                    clauseWrapper = s => $"({Environment.NewLine}    {s}{Environment.NewLine})";
                     break;
             }
 
@@ -149,7 +149,7 @@
             SimpleDataOrder dataOrder = clause.Build();
             if (string.IsNullOrWhiteSpace(dataOrder.Query))
                 return this;
-            return GetClone(string.Join("\r\n    ", dataOrder.Query.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)), dataOrder.Parameters);
+            return GetClone(string.Join($"{Environment.NewLine}    ", dataOrder.Query.Split(new[] { Environment.NewLine, "\r\n" , "\r", "\n" }, StringSplitOptions.None)), dataOrder.Parameters);
         }
 
         /// <summary>

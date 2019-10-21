@@ -9,7 +9,7 @@
         bool IModifyable.Modified => false;
         List<PropertyModification> IChangeDescriptor.GetChangedProperties() => new List<PropertyModification>();
         void IModifyable.Reset() { }
-        void IModifyable.Reset(string name) { }
+        bool IModifyable.Reset(string name) => false;
         void IModifyable.Save() { }
     }
 }

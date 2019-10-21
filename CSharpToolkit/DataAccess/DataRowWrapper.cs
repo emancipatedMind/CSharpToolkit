@@ -10,20 +10,16 @@
     /// <summary>
     /// A class that is a wrapper for the DataRow class. Offers strong typing access to the data row fields, and assignable aliases.
     /// </summary>
-    public class DataRowWrapper : IModifyableChangeDescriptor {
-
-        DataRow _row;
+    [System.Diagnostics.DebuggerStepThrough]
+    public class DataRowWrapper : IModifyableChangeDescriptor, IDisposable {
+        bool _disposed;
         readonly Utilities.Aliaser _aliaser = new Utilities.Aliaser();
+        List<PropertyStore> _propertyStore = new List<PropertyStore>();
 
         /// <summary>
-        /// Instantiates the DataRowWrapper class. One of the other constructors where the Row is set up beforehand is recommended.
+        /// Instantiates the DataRowWrapper class.
         /// </summary>
-        public DataRowWrapper() {
-            var table = new DataTable();
-            _row = table.NewRow();
-            table.Rows.Add(_row);
-            _row.BeginEdit();
-        }
+        public DataRowWrapper() { }
 
         /// <summary>
         /// Instantiates the DataRowWrapper class.
@@ -31,66 +27,14 @@
         /// <param name="row">The data row that is wrapped.</param>
         public DataRowWrapper(DataRow row) {
             System.Diagnostics.Debug.Assert(row != null, $"{typeof(DataRow).AssemblyQualifiedName} passed into {nameof(DataRowWrapper)} cannot be null.");
-
-            var table = new DataTable();
-            foreach (DataColumn column in row.Table.Columns) {
-                table.Columns.Add(column.ColumnName, column.DataType);
-            }
-            _row = table.NewRow();
-            table.Rows.Add(_row);
-            _row.ItemArray = (object[])row.ItemArray.Clone();
-            _row.AcceptChanges();
-            _row.BeginEdit();
-        }
-
-        /// <summary>
-        /// Instantiates the DataRowWrapper class. This overload allows a schema to be provided to the row wrapped underneath.
-        /// </summary>
-        /// <param name="schema">A collection of key value pairs used to generate the schema.</param>
-        public DataRowWrapper(IEnumerable<Tuple<string, Type>> schema) {
-            System.Diagnostics.Debug.Assert(schema != null, $"{typeof(Tuple<string, Type>).AssemblyQualifiedName} collection passed into {nameof(DataRowWrapper)} cannot be null.");
-            SetUpRowUsingNameAndType(schema);
-        }
-
-        /// <summary>
-        /// Instantiates the DataRowWrapper class. This overload allows a schema to be provided to the row wrapped underneath.
-        /// </summary>
-        /// <param name="schema">A collection of key value pairs used to generate the schema.</param>
-        public DataRowWrapper(IEnumerable<KeyValuePair<string, Type>> schema) {
-            System.Diagnostics.Debug.Assert(schema != null, $"{typeof(KeyValuePair<string, Type>).AssemblyQualifiedName} collection passed into {nameof(DataRowWrapper)} cannot be null.");
-            SetUpRowUsingNameAndType(schema.Select(kvp => Tuple.Create(kvp.Key, kvp.Value)));
-        }
-
-        /// <summary>
-        /// Instantiates the DataRowWrapper class. This overload will create a schema using property names, and types of the supplied type.
-        /// </summary>
-        /// <param name="properties">A collection of PropertyInfo classes used to generate the schema.</param>
-        public DataRowWrapper(IEnumerable<PropertyInfo> properties) {
-            System.Diagnostics.Debug.Assert(properties != null, $"{typeof(PropertyInfo).AssemblyQualifiedName} collection passed into {nameof(DataRowWrapper)} cannot be null.");
-            SetUpRowUsingNameAndType(properties.Select(p => Tuple.Create(p.Name, p.PropertyType)));
+            _propertyStore.AddRange(row.Table.Columns.Cast<DataColumn>().Select(col => new { Name = col.ColumnName, Value = row[col] }).Select(x => new PropertyStore(x.Name) { Current = x.Value, Original = x.Value }));
         }
 
         /// <summary>
         /// Instantiates the DataRowWrapper class. This overload will create a schema using property names, and types of the supplied type.
         /// </summary>
         /// <param name="type">The type used to generate the schema.</param>
-        public DataRowWrapper(Type type) {
-            System.Diagnostics.Debug.Assert(type != null, $"{typeof(System.Type).AssemblyQualifiedName} passed into {nameof(DataRowWrapper)} cannot be null.");
-            SetUpRowUsingNameAndType(
-                type
-                    .GetProperties()
-                    .Select(p => Tuple.Create(p.Name, p.PropertyType))
-                );
-        }
-
-        private void SetUpRowUsingNameAndType(IEnumerable<Tuple<string, Type>> schema) {
-            var table = new DataTable();
-            schema.ForEach(s => table.Columns.Add(s.Item1, Nullable.GetUnderlyingType(s.Item2) ?? s.Item2));
-            _row = table.NewRow();
-            table.Rows.Add(_row);
-            _row.AcceptChanges();
-            _row.BeginEdit();
-        }
+        public DataRowWrapper(Type type) { }
 
         /// <summary>
         /// Access to the original data of wrapped DataRow.
@@ -99,9 +43,7 @@
         /// <param name="name">Field name.</param>
         /// <returns>Data found. If no data found, returns DBNull.Value if nullable, or default if System.ValueType.</returns>
         protected T GetOriginalValue<T>(string name) =>
-            _row.HasVersion(DataRowVersion.Original) ?
-                GetValue<T>(name, DataRowVersion.Original) :
-                GetValue<T>(name, DataRowVersion.Current);
+            GetValue<T>(name, RetrieveValue.Original);
 
         /// <summary>
         /// Access to the current data of wrapped DataRow.
@@ -110,32 +52,27 @@
         /// <param name="name">Field name.</param>
         /// <returns>Data found. If no data found, returns DBNull.Value if nullable, or default if System.ValueType.</returns>
         protected T GetCurrentValue<T>(string name) =>
-            _row.HasVersion(DataRowVersion.Proposed) ?
-                GetValue<T>(name, DataRowVersion.Proposed) :
-                GetValue<T>(name, DataRowVersion.Current);
+            GetValue<T>(name, RetrieveValue.Current);
 
         /// <summary>
         /// Marks data so that a reset can be used to restore.
         /// </summary>
         void IModifyable.Save() {
-            _row.AcceptChanges();
-            _row.BeginEdit();
+            _propertyStore.ForEach(prop => prop.Original = prop.Current);
         }
 
         /// <summary>
         /// Reverts data to last saved state.
         /// </summary>
         void IModifyable.Reset() {
-            _row.RejectChanges();
-            _row.BeginEdit();
+            _propertyStore.ForEach(prop => prop.Current = prop.Original);
         }
 
         /// <summary>
         /// Whether any changes exist since last Save/Reset.
         /// </summary>
         bool IModifyable.Modified =>
-            _row.Table.Columns.Cast<DataColumn>()
-                .Any(column => HasFieldChanged(column.ColumnName));
+            _propertyStore.Any(prop => prop.HasPropertyChanged());
 
         /// <summary>
         /// Add alias that can be used to access data.
@@ -184,13 +121,19 @@
         /// Used to reset only one field of the instance.
         /// </summary>
         /// <param name="name">The property to reset.</param>
-        public void Reset(string name) {
+        public bool Reset(string name) {
             string field = _aliaser.LookUpAlias(name);
 
-            if (_row.Table.Columns.Contains(field) == false)
-                return;
+            PropertyStore propStore = _propertyStore.FirstOrDefault(prop => prop.PropertyName == field);
 
-            _row[field] = _row[field, GetVersion(DataRowVersion.Original)];
+            if (propStore != null) {
+                bool propChanged = propStore.HasPropertyChanged();
+                if (propChanged)
+                    propStore.Current = propStore.Original;
+                return propChanged;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -202,53 +145,26 @@
         protected void SetValue<T>(string name, T data) {
             string field = _aliaser.LookUpAlias(name);
 
-            if (_row.Table.Columns.Contains(field) == false) {
-                var table = _row.Table.Clone();
-                table.Columns.Add(field, Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T));
-                DataRow row = table.NewRow();
-                foreach (DataColumn column in _row.Table.Columns) {
-                    row[column.ColumnName] = _row[column, GetVersion(DataRowVersion.Original)];
-                }
-                table.Rows.Add(row);
-                row.AcceptChanges();
-                row.BeginEdit();
-                foreach (DataColumn column in _row.Table.Columns) {
-                    row[column.ColumnName] = _row[column, GetVersion(DataRowVersion.Proposed)];
-                }
-                _row = row;
+            PropertyStore propStore = _propertyStore.FirstOrDefault(prop => prop.PropertyName == field);
+            if (propStore == null) {
+                propStore = new PropertyStore(field);
+                _propertyStore.Add(propStore);
             }
-
-            _row.SetField(name, data);
+            propStore.Current = data;
+            if (propStore.PropertyType == null)
+                propStore.PropertyType = typeof(T);
         }
 
-        /// <summary>
-        /// Used to determine if a specified field has changed. If requested field is not contained in wrapped datarow, returns false.
-        /// </summary>
-        /// <param name="name">Field name.</param>
-        /// <returns>Whether field name has changed or not.</returns>
-        protected bool HasFieldChanged(string name) {
+        private T GetValue<T>(string name, RetrieveValue retrieveValue) {
             string field = _aliaser.LookUpAlias(name);
 
-            if (_row.Table.Columns.Contains(field) == false)
-                return false;
+            PropertyStore propStore = _propertyStore.FirstOrDefault(prop => prop.PropertyName == field);
 
-            object original = _row[name, GetVersion(DataRowVersion.Original)];
-            object proposed = _row[name, GetVersion(DataRowVersion.Proposed)];
-
-            return proposed.Equals(original) == false;
-        }
-
-        private T GetValue<T>(string name, DataRowVersion version) {
-            if (_row.HasVersion(version) == false)
-                return default(T);
-
-            string field = _aliaser.LookUpAlias(name);
-
-            if (_row.Table.Columns.Contains(field) == false)
+            if (propStore == null)
                 return default(T);
 
             Type type = typeof(T);
-            object value = _row[field, version];
+            object value = retrieveValue == RetrieveValue.Current ? propStore.Current : propStore.Original;
 
             bool notNullable = (
                 type == typeof(string)
@@ -270,29 +186,53 @@
         /// <returns>A list of property names that changed since last call.</returns>
         List<PropertyModification> IChangeDescriptor.GetChangedProperties() =>
             Utilities.Get.List<PropertyModification>(list => {
-                foreach (DataColumn column in _row.Table.Columns) {
-                    if (HasFieldChanged(column.ColumnName)) {
+                MethodInfo method = null;
+                foreach (PropertyStore store in _propertyStore) {
+                    if (store.HasPropertyChanged()) {
+                        string name = _aliaser.LookUpName(store.PropertyName);
 
-                        string name = _aliaser.LookUpName(column.ColumnName);
+                        var genericMethod =
+                            (method ?? (method = typeof(DataRowWrapper).GetMethod(nameof(GetValue), BindingFlags.Instance | BindingFlags.NonPublic)))
+                            .MakeGenericMethod(store.PropertyType);
+                        object original = genericMethod.Invoke(this, new object[] { name, RetrieveValue.Original });
+                        object current = genericMethod.Invoke(this, new object[] { name, RetrieveValue.Current });
 
-                        Type type = column.DataType;
-
-                        object newValue = GetValueForChangedProperty(name, DataRowVersion.Proposed, column);
-                        object oldValue = GetValueForChangedProperty(name, DataRowVersion.Original, column);
-
-                        list.Add(new PropertyModification(name, type, oldValue, newValue));
+                        list.Add(new PropertyModification(name, store.PropertyType, original, current));
                     }
                 }
             });
 
-        object GetValueForChangedProperty(string name, DataRowVersion version, DataColumn type) {
-            object value = _row[name, GetVersion(version)];
-            return value is DBNull ?
-                type.AllowDBNull ? null : Activator.CreateInstance(type.DataType) :
-                value;
+        protected void Dispose(bool disposing) {
+            if (!_disposed) {
+                _aliaser.Dispose();
+                _propertyStore.ForEach(prop => prop.Original = prop.Current = prop.PropertyType = null);
+                _propertyStore.Clear();
+            }
+            _disposed = true;
         }
 
-        DataRowVersion GetVersion(DataRowVersion version) =>
-            _row.HasVersion(version) ? version : DataRowVersion.Current;
+        public void Dispose() => Dispose(true);
+
+        enum RetrieveValue {
+            Current,
+            Original
+        }
+
+        class PropertyStore {
+
+            object _original;
+            object _current;
+
+            public PropertyStore(string name) {
+                PropertyName = name;
+            }
+
+            public string PropertyName { get; }
+            public Type PropertyType { get; set; }
+            public object Current { get { return _current ?? DBNull.Value; } set { _current = value; } }
+            public object Original { get { return _original ?? DBNull.Value; } set { _original = value; } }
+
+            public bool HasPropertyChanged() => Current.Equals(Original) == false;
+        }
     }
 }

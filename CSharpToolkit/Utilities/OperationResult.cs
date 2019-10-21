@@ -6,6 +6,7 @@
     /// Class used to contain an operation. Can denote whether operation was successful and provide, if faulted, exceptions thrown by operation.
     /// </summary>
     /// <typeparam name="T">Operation result type.</typeparam>
+    [System.Diagnostics.DebuggerStepThrough]
     public class OperationResult<T> : OperationResult {
         /// <summary>
         /// Instantiates <see cref="OperationResult"/> class. This overload assumes operaton was successful.
@@ -48,6 +49,7 @@
     /// <summary>
     /// Class used to contain an operation. Can denote whether operation was successful and provide, if faulted, exceptions thrown by operation.
     /// </summary>
+    [System.Diagnostics.DebuggerStepThrough]
     public class OperationResult {
         /// <summary>
         /// Instantiates <see cref="OperationResult"/> class. This overload of constructor assumes operation was successful.

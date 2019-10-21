@@ -113,6 +113,7 @@
     <Compile Include="DataAccess\Abstractions\IDataAccessor.cs" />
     <Compile Include="DataAccess\Abstractions\ISimpleDataOrder.cs" />
     <Compile Include="Utilities\Abstractions\IAliasedCommandTypeDataOrderFormatter.cs" />
+    <Compile Include="Utilities\Abstractions\IConverter.cs" />
     <Compile Include="Utilities\Abstractions\IExporter.cs" />
     <Compile Include="Utilities\Abstractions\IIdProvider.cs" />
     <Compile Include="Utilities\Abstractions\IImport.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Utilities\EventArgs\DualLockEventArgs.cs" />
     <Compile Include="Utilities\EventArgs\StateChangeEventArgs.cs" />
     <Compile Include="Utilities\Formatters\CityStateZipFormatter.cs" />
+    <Compile Include="Utilities\Formatters\CommaFormatter.cs" />
     <Compile Include="Utilities\Formatters\ConcatenateWithHyphenFormatter.cs" />
     <Compile Include="Utilities\Formatters\ConcatenateWithStringFormatter.cs" />
     <Compile Include="Utilities\Formatters\NameExtensionFormatter.cs" />
@@ -140,9 +142,13 @@
     <Compile Include="Utilities\Formatters\FirstLegalTextFormatter.cs" />
     <Compile Include="Utilities\Formatters\PhoneNumberFormatter.cs" />
     <Compile Include="Utilities\Formatters\RegExFormatter.cs" />
+    <Compile Include="Utilities\Formatters\SpaceFormatter.cs" />
+    <Compile Include="Utilities\Formatters\ToStringFormatter.cs" />
     <Compile Include="Utilities\Formatters\TSqlFormatter.cs" />
     <Compile Include="Utilities\Formatters\ZipCodeFormatter.cs" />
     <Compile Include="Utilities\Abstractions\IExtendedNavigator.cs" />
+    <Compile Include="Utilities\GenericContainer.cs" />
+    <Compile Include="Utilities\ConvertingObservableCollection.cs" />
     <Compile Include="Utilities\LockerProxy.cs" />
     <Compile Include="Utilities\LockStatus.cs" />
     <Compile Include="Utilities\Locker.cs" />
@@ -201,20 +207,25 @@
     <Compile Include="Utilities\EventArgs\GenericEventArgs.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Validation\SQLInjectionValidator.cs" />
+    <Compile Include="XAML\Abstractions\IFocusChanger.cs" />
     <Compile Include="XAML\Abstractions\IListItemConverter.cs" />
     <Compile Include="XAML\AwaitableDelegateCommand.cs" />
     <Compile Include="XAML\AwaitableDelegateCommandBase.cs" />
+    <Compile Include="XAML\Behaviors\CallbackListItemConverter.cs" />
     <Compile Include="XAML\Behaviors\DataGridBehaviors.cs" />
     <Compile Include="XAML\Behaviors\DependencyPropertyBehaviors.cs" />
     <Compile Include="XAML\Behaviors\ExplicitErrorAddingBehavior.cs" />
     <Compile Include="XAML\Behaviors\GridViewSort.cs" />
     <Compile Include="XAML\Behaviors\InputKeyRestrictor.cs" />
-    <Compile Include="XAML\Behaviors\NullListItemConverter.cs" />
     <Compile Include="XAML\Behaviors\PasswordBoxBehavior.cs" />
+    <Compile Include="XAML\Behaviors\ControlBehaviors.cs" />
     <Compile Include="XAML\Behaviors\SelectorBehaviors.cs" />
     <Compile Include="XAML\Behaviors\SortGlyphAdorner.cs" />
+    <Compile Include="XAML\Behaviors\TextBoxBaseBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\TreeViewHelper.cs" />
     <Compile Include="XAML\Behaviors\TwoListSynchronizer.cs" />
     <Compile Include="XAML\Behaviors\UIElementBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\FrameworkElementBehaviors.cs" />
     <Compile Include="XAML\BindablePasswordViewModel.cs" />
     <Compile Include="XAML\Converters\AlternatingRowColorConverter.cs" />
     <Compile Include="XAML\Converters\BooleanANDConverter.cs" />
@@ -238,7 +249,7 @@
     <Compile Include="XAML\Converters\YearConverter.cs" />
     <Compile Include="XAML\DelegateCommand.cs" />
     <Compile Include="XAML\Behaviors\DialogSignalerEnvironment.cs" />
-    <Compile Include="XAML\DialogViewModel.cs" />
+    <Compile Include="XAML\DialogEntityBase.cs" />
     <Compile Include="XAML\DoubleClickListView.cs" />
     <Compile Include="XAML\DoubleClickListViewItem.cs" />
     <Compile Include="XAML\EntityBase.cs" />
@@ -253,6 +264,8 @@
     <Compile Include="XAML\Converters\IsNullConverter.cs" />
     <Compile Include="XAML\Converters\ColorToSolidBrushConverter.cs" />
     <Compile Include="XAML\Converters\SolidBrushToColorConverter.cs" />
+    <Compile Include="XAML\SingleValueViewModel.cs" />
+    <Compile Include="XAML\TokenTimer.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

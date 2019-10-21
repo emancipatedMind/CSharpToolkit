@@ -11,12 +11,26 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.ComponentModel.DataAnnotations;
+    using System.Windows.Input;
+    using System.Collections.ObjectModel;
+
     /// <summary>
     /// Class used as base for ViewModel providing common ViewModel operations.
     /// </summary>
-    public abstract class EntityBase : IUserNotifier, INotifyDataErrorInfo, INotifyPropertyChanged, IDataErrorInfo, IExplicitErrorAdder, INotifyDisposable {
-        private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+    public abstract class EntityBase : IUserNotifier, INotifyDataErrorInfo, INotifyPropertyChanged, IDataErrorInfo, IExplicitErrorAdder, INotifyDisposable, IFocusChanger {
         private bool disposedValue = false;
+
+        readonly Dictionary<string, ObservableCollection<string>> _errors = new Dictionary<string, ObservableCollection<string>>();
+        readonly ObservableCollection<Tuple<string, ReadOnlyObservableCollection<string>>> _publicErrors = new ObservableCollection<Tuple<string, ReadOnlyObservableCollection<string>>>();
+
+        public EntityBase() {
+            Errors = new ReadOnlyObservableCollection<Tuple<string, ReadOnlyObservableCollection<string>>>(_publicErrors);
+        }
+
+        /// <summary>
+        /// Public list of errors for binding. Cannot be modified directly.
+        /// </summary>
+        public ReadOnlyObservableCollection<Tuple<string, ReadOnlyObservableCollection<string>>> Errors { get; }
 
         /// <summary>
         /// Gets errors recorded by Property.
@@ -25,8 +39,8 @@
         /// <returns>Errors found for propertyName.</returns>
         public IEnumerable GetErrors(string propertyName) {
             if (string.IsNullOrEmpty(propertyName))
-                return _errors.Values;
-            return _errors.ContainsKey(propertyName) ? _errors[propertyName] : null;
+                return _publicErrors.Select(e => e.Item2);
+            return _publicErrors.FirstOrDefault(e => e.Item1 == propertyName)?.Item2;
         }
 
         /// <summary>
@@ -51,7 +65,12 @@
         /// <param name="propertyName">Property name for which errors should be cleared.</param>
         protected void ClearErrors(string propertyName = "") {
             bool fireEvent = HasErrors;
-            _errors.Remove(propertyName);
+            if (_errors.ContainsKey(propertyName)) {
+                _errors.Remove(propertyName);
+                var item = _publicErrors.FirstOrDefault(er => er.Item1 == propertyName);
+                if (item != null)
+                    _publicErrors.Remove(item);
+            }
             OnErrorsChanged(propertyName);
             if (fireEvent) OnPropertyChanged(nameof(HasErrors));
         }
@@ -70,22 +89,30 @@
         /// <param name="propertyName">Property name for which errors should be added.</param>
         /// <param name="errors">Error text to add.</param>
         protected void AddErrors(string propertyName, IEnumerable<string> errors) {
-            errors = errors ?? new string[0];
-            if (errors.Any() == false)
+            if ((errors?.Any() ?? false) == false)
                 return;
 
             bool hasErrorsHasChanged = HasErrors == false;
             bool incomingPropertyErrorsHasChanged = false;
 
-            if (_errors.ContainsKey(propertyName) == false) {
-                _errors.Add(propertyName, new List<string>());
+            bool listContainsKey = _errors.ContainsKey(propertyName);
+            ObservableCollection<string> list;
+
+            if (listContainsKey) {
+                list = _errors[propertyName];
+            }
+            else {
+                list = new ObservableCollection<string>();
+                _errors.Add(propertyName, list);
+                _publicErrors.Add(Tuple.Create(propertyName, new ReadOnlyObservableCollection<string>(list)));
                 incomingPropertyErrorsHasChanged = true;
             }
 
             foreach (var error in errors) {
-                if (_errors[propertyName].Contains(error))
+                if (list.Contains(error)) 
                     continue;
-                _errors[propertyName].Add(error);
+
+                list.Add(error);
                 incomingPropertyErrorsHasChanged = true;
             }
 
@@ -190,6 +217,16 @@
             AddError(propertyName, ex.Message);
         }
 
+        public event EventHandler<GenericEventArgs<FocusNavigationDirection>> FocusChangeRequested;
+        public void RequestFocusChange(FocusNavigationDirection request) {
+            FocusChangeRequested?.Invoke(this, new GenericEventArgs<FocusNavigationDirection>(request));
+        }
+        public void RequestNextFocus() =>
+            RequestFocusChange(FocusNavigationDirection.Next);
+
+        public void RequestPreviousFocus() =>
+            RequestFocusChange(FocusNavigationDirection.Previous);
+
         #region IDisposable Support
         /// <summary>
         /// Notification that disposing has finished.
@@ -203,15 +240,20 @@
         protected virtual void Dispose(bool disposing) {
             if (!disposedValue) {
                 if (disposing) {
+                    foreach(var item in _errors) {
+                        item.Value.Clear();
+                    }
                     _errors.Clear();
+                    _publicErrors.Clear();
 
                     ErrorsChanged = null;
                     Notify = null;
                     PropertyChanged = null;
+                    FocusChangeRequested = null;
                 }
                 disposedValue = true;
+                Disposed?.Invoke(this, EventArgs.Empty);
             }
-            Disposed?.Invoke(this, EventArgs.Empty);
             Disposed = null;
         }
 

@@ -17,11 +17,17 @@
         }
 
         private Geometry GetDefaultGlyph() {
-            double x1 = _columnHeader.ActualWidth - 13;
-            double x2 = x1 + 10;
-            double x3 = x1 + 5;
-            double y1 = _columnHeader.ActualHeight / 2 - 3;
-            double y2 = y1 + 5;
+            //double x1 = _columnHeader.ActualWidth - 13;
+            //double x2 = x1 + 10;
+            //double x3 = x1 + 5;
+            //double y1 = _columnHeader.ActualHeight / 2 - 3;
+            //double y2 = y1 + 5;
+
+            double x1 = _columnHeader.ActualWidth / 2;
+            double x2 = x1 + 5;
+            double x3 = x1 + 2.5;
+            double y1 = 1;
+            double y2 = y1 + 3;
 
             if (_direction == ListSortDirection.Ascending) {
                 double tmp = y1;
@@ -29,7 +35,7 @@
                 y2 = tmp;
             }
 
-            PathSegmentCollection pathSegmentCollection = new PathSegmentCollection();
+            var pathSegmentCollection = new PathSegmentCollection();
             pathSegmentCollection.Add(new LineSegment(new Point(x2, y1), true));
             pathSegmentCollection.Add(new LineSegment(new Point(x3, y2), true));
 

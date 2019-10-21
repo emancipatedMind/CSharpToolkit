@@ -11,7 +11,7 @@
         /// Expects one argument. Used to format a phone number.
         /// </summary>
         /// <param name="text">Expects one argument. Text to format into phone number.</param>
-        /// <returns>Returns (781) 555 - 1234 if ten digits, 555 - 1234 if seven digits, and otherwise, returns input.</returns>
+        /// <returns>Returns (781) 555 - 1234 if ten digits, 555 - 1234 if seven digits, <see cref="EmptyOrNull"/> if input is null, or has a length of zero and otherwise, returns input.</returns>
         public string Format(params string[] text) {
 
             string input = text.ElementAtOrDefault(0) ?? "";
@@ -26,14 +26,6 @@
 
             return input;
         }
-
-        /// <summary>
-        /// Expects one argument. Used to format a phone number.
-        /// </summary>
-        /// <param name="phoneNumber">Expects one argument. Text to format into phone number.</param>
-        /// <returns>Returns (781) 555 - 1234 if ten digits, 555 - 1234 if seven digits, and otherwise, returns input.</returns>
-        public string FormatPhoneNumber(string phoneNumber) =>
-            Format(new[] { phoneNumber });
 
         /// <summary>
         /// Specifies string to display when value is null or empty. string.Empty by default.

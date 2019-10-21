@@ -6,8 +6,10 @@
     /// <summary>
     /// Class that provides aliasing features.
     /// </summary>
-    public class Aliaser {
+    [System.Diagnostics.DebuggerStepThrough]
+    public class Aliaser : IDisposable {
 
+        bool _disposed;
         List<Tuple<string, string>> _combinedAliases = new List<Tuple<string, string>>();
 
         /// <summary>
@@ -99,6 +101,16 @@
 
             _combinedAliases.AddRange(aliases);
         }
+
+        protected void Dispose(bool disposing) {
+            if (!_disposed) {
+                _combinedAliases.Clear();
+            }
+            _disposed = true;
+        } 
+
+        public void Dispose() => Dispose(true);
+
 
     }
 }

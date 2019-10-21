@@ -9,6 +9,7 @@
     /// </summary>
     public class Locker : ILocker {
 
+        private bool _disposed = false;
         List<object> _tokens = new List<object>();
 
         /// <summary>
@@ -48,5 +49,17 @@
                 LockStatusChanged?.Invoke(this, new GenericEventArgs<LockStatus>(LockStatus.Free));
         }
 
+        protected virtual void Dispose(bool disposing) {
+            if (!_disposed) {
+                if (disposing) {
+                    _tokens.Clear();
+                    LockStatusChanged?.Invoke(this, new GenericEventArgs<LockStatus>(LockStatus.Free));
+                    LockStatusChanged = null;
+                }
+                _disposed = true;
+            }
+        }
+
+        public void Dispose() => Dispose(true);
     }
 }

@@ -46,10 +46,10 @@
 
         List<string> GetAllProperties(object obj, Func<PropertyInfo, bool> filter, int precedingSpaceCount) =>
             PrependSpaceCount(precedingSpaceCount, list => {
-                foreach (PropertyInfo prop in obj.GetType().GetProperties().Where(filter)) {
+                foreach (PropertyInfo prop in obj.GetType().GetProperties().Where(filter) ) {
                     object value = prop.GetValue(obj);
                     if (value == null)
-                        return;
+                        continue;
                     if (value is string || prop.PropertyType.IsSubclassOf(typeof(ValueType))) {
                         if (value.ToString().Length < 200) {
                             list.Add($"{prop.Name} : {System.Text.RegularExpressions.Regex.Replace(value.ToString(), @"(\s{2,})|([\r\n]{1,2})", " ")}");

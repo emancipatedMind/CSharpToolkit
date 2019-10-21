@@ -5,6 +5,12 @@
     /// Returns first string that isn't null, empty, or just whitespace. If no legal string, returns string.Empty.
     /// </summary>
     public class FirstLegalTextFormatter : IStringFormatter {
+
+        static FirstLegalTextFormatter _instance;
+        public static FirstLegalTextFormatter Instance => _instance ?? (_instance = new FirstLegalTextFormatter());
+
+        private FirstLegalTextFormatter() { }
+
         /// <summary>
         /// Returns first string that isn't null or, empty, or just whitespace. If no legal string, returns string.Empty.
         /// </summary>
@@ -14,5 +20,6 @@
             string[] washedText = Perform.NullAndWhitespaceReplace(text);
             return washedText.FirstOrDefault(t => string.IsNullOrEmpty(t) == false) ?? "";
         }
+
     }
 }

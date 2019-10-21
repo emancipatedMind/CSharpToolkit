@@ -5,6 +5,11 @@
     /// </summary>
     public class ZipCodeFormatter : IStringFormatter {
 
+        static ZipCodeFormatter _instance;
+        public static ZipCodeFormatter Instance => _instance ?? (_instance = new ZipCodeFormatter());
+
+        ZipCodeFormatter() { }
+
         System.Text.RegularExpressions.Regex _numericCharacterPreserver = new System.Text.RegularExpressions.Regex("[^0-9]");
 
         /// <summary>

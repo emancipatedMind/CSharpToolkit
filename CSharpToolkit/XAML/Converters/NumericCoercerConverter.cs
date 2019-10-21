@@ -14,7 +14,7 @@
         /// <param name="parameter">Converter parameter. (Unused.)</param>
         /// <param name="culture">Culture. (Unused.)</param>
         /// <returns>Returns input.</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value;
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value ?? NullValue;
         /// <summary>
         /// Coerces value to be sure it can be represented as byte, short, int, or long.
         /// </summary>
@@ -75,6 +75,12 @@
 
             return decimalValue;
         }
+
+        /// <summary>
+        /// The value to output to <see cref="Convert(object, Type, object, CultureInfo)"/> if input is null;
+        /// </summary>
+        public object NullValue { get; set; }
+
 
     }
 }

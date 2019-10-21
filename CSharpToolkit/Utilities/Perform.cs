@@ -234,6 +234,25 @@
         /// Clears collection, and then rehydrates with newItems using current SynchronizationContext.
         /// </summary>
         /// <typeparam name="C">The collection type.</typeparam>
+        /// <param name="collection">The collection for which the rehydration will be performed.</param>
+        /// <returns>Task to complete asynchronously.</returns>
+        public static async Task CollectionClear<C>(ObservableCollection<C> collection) {
+            if (collection == null)
+                return;
+            if (SynchronizationContext.Current == null)
+                SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+            await Task.Factory.StartNew(
+                () => collection.ToArray().ForEach(item => collection.Remove(item)),
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                TaskScheduler.FromCurrentSynchronizationContext()
+            );
+        }
+
+        /// <summary>
+        /// Clears collection, and then rehydrates with newItems using current SynchronizationContext.
+        /// </summary>
+        /// <typeparam name="C">The collection type.</typeparam>
         /// <typeparam name="I">The input type.</typeparam>
         /// <typeparam name="TKey">The order type.</typeparam>
         /// <param name="collection">The collection for which the rehydration will be performed.</param>
@@ -246,8 +265,7 @@
             if (collection == null || newItems == null || selectFunction == null)
                 return;
 
-            if (collection.Any())
-                collection.Clear();
+            await CollectionClear(collection);
 
             C[] newCollection = orderByDesc ?
                 await Task.Run(() => newItems.Select(selectFunction).OrderByDescending(orderByFunction).ToArray()) :
@@ -291,8 +309,7 @@
                 return;
             if (SynchronizationContext.Current == null)
                 SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
-            if (collection.Any())
-                collection.Clear();
+            await CollectionClear(collection);
             await Task.Factory.StartNew(
                 () => newItems.ForEach(collection.Add),
                 CancellationToken.None,
@@ -314,8 +331,7 @@
             if (collection == null || newItems == null || selectFunction == null)
                 return;
 
-            if (collection.Any())
-                collection.Clear();
+            await CollectionClear(collection);
 
             C[] newCollection =
                 await Task.Run(() => newItems.Select(selectFunction).ToArray());
@@ -356,7 +372,7 @@
         /// <param name="task">The async method to call.</param>
         /// <param name="useCurrentSynchronization">Whether the current synchronization context should be used.</param>
         /// <returns>An operation result containing a task whose result is a task that represents the async call. The nested inner Task should only be awaited. The outer Task can have Wait called on it to be synchronous.</returns>
-        /// <exception>An operation result containing a task whose result is a task that represents the async call. The nested inner Task should only be awaited. The outer Task can have Wait called on it to be synchronous.</exception>
+        /// <exception>If the current synchronization context is null, and has been elected to be used, </exception>
         public static OperationResult<Task<Task>> InvocationOfAsyncMethod(Func<Task> task, bool useCurrentSynchronization = true) =>
             Get.OperationResult(() => {
                 TaskScheduler scheduler = TaskScheduler.Default;
@@ -506,7 +522,7 @@
                 if (type == null)
                     throw new ArgumentNullException($"{nameof(type)} cannot be null.");
 
-                var typeFields = type.GetProperties().Select(p => p.Name);
+                var typeFields = type.GetProperties().Select(p => p.Name).ToArray();
                 var argumentList =
                 new List<string>(propertyNames.Where(c => typeFields.Contains(c) == false));
 

@@ -11,7 +11,7 @@
         /// <param name="window">The window whose top window is requested.</param>
         /// <returns>The top window. If null is passed, null will be returned.</returns>
         public static Window GetTopParentWindow(this Window window) =>
-            window?.Owner == null ? window : window.Owner;
+            window?.Owner == null ? window : window.Owner.GetTopParentWindow();
 
     }
 }

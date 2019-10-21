@@ -10,7 +10,7 @@
     /// </summary>
     public class TwoListSynchronizer : IWeakEventListener {
 
-        readonly static IListItemConverter DefaultConverter = new NullListItemConverter();
+        readonly static IListItemConverter DefaultConverter = new CallbackListItemConverter();
         readonly IList _masterList;
         readonly IListItemConverter _masterTargetConverter;
         readonly IList _targetList;
@@ -31,7 +31,7 @@
         public TwoListSynchronizer(IList masterList, IList targetList, IListItemConverter masterTargetConverter) {
             _masterList = masterList;
             _targetList = targetList;
-            _masterTargetConverter = masterTargetConverter;
+            _masterTargetConverter = masterTargetConverter ?? DefaultConverter;
         }
 
         /// <summary>
@@ -44,7 +44,10 @@
         /// true if the listener handled the event. It is considered an error by the <see cref="T:System.Windows.WeakEventManager"/> handling in WPF to register a listener for an event that the listener does not handle. Regardless, the method should return false if it receives an event that it does not recognize or handle.
         /// </returns>
         public bool ReceiveWeakEvent(Type managerType, object sender, EventArgs e) {
-            HandleCollectionChanged(sender as IList, e as NotifyCollectionChangedEventArgs);
+            if (sender is IList == false || e is NotifyCollectionChangedEventArgs == false)
+                return false;
+
+            HandleCollectionChanged((IList)sender, (NotifyCollectionChangedEventArgs)e);
             return true;
         }
 
@@ -52,13 +55,22 @@
         /// Start synchronizing the lists.
         /// </summary>
         public void StartSynchronizing() {
-            ListenForChangeEvents(_masterList);
-            ListenForChangeEvents(_targetList);
-
             SetListValuesFromSource(_masterList, _targetList, ConvertFromMasterToTarget);
 
-            if (TargetAndMasterCollectionsAreEqual() == false)
+            bool targetAndMasterCollectionsAreNotEqual =
+                _masterList
+                    .Cast<object>()
+                    .SequenceEqual(
+                        _targetList
+                            .Cast<object>()
+                            .Select(ConvertFromTargetToMaster)
+                    ) == false;
+
+            if (targetAndMasterCollectionsAreNotEqual)
                 SetListValuesFromSource(_targetList, _masterList, ConvertFromTargetToMaster);
+
+            ListenForChangeEvents(_masterList);
+            ListenForChangeEvents(_targetList);
         }
 
         /// <summary>
@@ -87,96 +99,73 @@
                 CollectionChangedEventManager.RemoveListener((INotifyCollectionChanged)list, this);
         }
 
-        private void AddItems(IList list, NotifyCollectionChangedEventArgs e, Func<object, object> converter) {
+        private object ConvertFromMasterToTarget(object item) => _masterTargetConverter.Convert(item);
+        private object ConvertFromTargetToMaster(object item) => _masterTargetConverter.ConvertBack(item);
+
+        private void HandleCollectionChanged(object s, NotifyCollectionChangedEventArgs e) {
+            IList sourceList = (IList)s;
+            bool sourceListIsMasterList = ReferenceEquals(sourceList, _masterList);
+
+            IList listToUpdate;
+            Func<object, object> converter;
+
+            if (sourceListIsMasterList) {
+                listToUpdate = _targetList;
+                converter = ConvertFromMasterToTarget;
+            }
+            else {
+                listToUpdate = _masterList;
+                converter = ConvertFromTargetToMaster;
+            }
+
+            StopListeningForChangeEvents(listToUpdate);
+            switch (e.Action) {
+                case NotifyCollectionChangedAction.Add:
+                    AddItems(listToUpdate, e, converter);
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                case NotifyCollectionChangedAction.Replace:
+                    RemoveItems(listToUpdate, e, converter);
+                    AddItems(listToUpdate, e, converter);
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    RemoveItems(listToUpdate, e, converter);
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    SetListValuesFromSource(sourceList, listToUpdate, converter);
+                    break;
+            }
+            ListenForChangeEvents(listToUpdate);
+        }
+
+        #region Static Helpers
+        protected static void SetListValuesFromSource(IList sourceList, IList listToUpdate, Func<object, object> converter) {
+            listToUpdate.Clear();
+
+            foreach (object item in sourceList)
+                listToUpdate.Add(converter(item));
+        }
+
+        protected static void AddItems(IList listToUpdate, NotifyCollectionChangedEventArgs e, Func<object, object> converter) {
             int length = e.NewItems.Count;
 
             for (int i = 0; i < length; i++) {
                 int insertionPoint = e.NewStartingIndex + i;
                 object item = converter(e.NewItems[i]);
 
-                if (insertionPoint > list.Count)
-                    list.Add(item);
+                if (insertionPoint > listToUpdate.Count)
+                    listToUpdate.Add(item);
                 else
-                    list.Insert(insertionPoint, item);
+                    listToUpdate.Insert(insertionPoint, item);
             }
         }
 
-        private object ConvertFromMasterToTarget(object item) =>
-            _masterTargetConverter?.Convert(item) ?? item;
-
-        private object ConvertFromTargetToMaster(object item) =>
-            _masterTargetConverter?.ConvertBack(item) ?? item;
-
-        private void HandleCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
-            IList sourceList = sender as IList;
-
-            switch (e.Action) {
-                case NotifyCollectionChangedAction.Add:
-                    PerformActionOnAllLists(AddItems, sourceList, e);
-                    break;
-                case NotifyCollectionChangedAction.Move:
-                    PerformActionOnAllLists(MoveItems, sourceList, e);
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    PerformActionOnAllLists(RemoveItems, sourceList, e);
-                    break;
-                case NotifyCollectionChangedAction.Replace:
-                    PerformActionOnAllLists(ReplaceItems, sourceList, e);
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    UpdateListsFromSource(sourceList);
-                    break;
-            }
-        }
-
-        private void MoveItems(IList list, NotifyCollectionChangedEventArgs e, Func<object, object> converter) {
-            RemoveItems(list, e, converter);
-            AddItems(list, e, converter);
-        }
-
-        void PerformActionOnAllLists(Action<IList, NotifyCollectionChangedEventArgs, Func<object, object>> action, IList sourceList, NotifyCollectionChangedEventArgs e) {
-            if (ReferenceEquals(sourceList, _masterList))
-                PerformActionOnList(_targetList, action, e, ConvertFromMasterToTarget);
-            else
-                PerformActionOnList(_masterList, action, e, ConvertFromTargetToMaster);
-        }
-
-        private void PerformActionOnList(IList list, Action<IList, NotifyCollectionChangedEventArgs, Func<object, object>> action, NotifyCollectionChangedEventArgs e, Func<object, object> converter) {
-            StopListeningForChangeEvents(list);
-            action(list, e, converter);
-            ListenForChangeEvents(list);
-        }
-
-        private void RemoveItems(IList list, NotifyCollectionChangedEventArgs e, Func<object, object> converter) {
+        protected static void RemoveItems(IList listToUpdate, NotifyCollectionChangedEventArgs e, Func<object, object> converter) {
             int length = e.OldItems.Count;
             for (int i = 0; i < length; i++)
-                list.RemoveAt(e.OldStartingIndex);
+                listToUpdate.RemoveAt(e.OldStartingIndex);
         }
-
-        private void ReplaceItems(IList list, NotifyCollectionChangedEventArgs e, Func<object, object> converter) {
-            RemoveItems(list, e, converter);
-            AddItems(list, e, converter);
-        }
-
-        private void SetListValuesFromSource(IList sourceList, IList targetList, Func<object, object> converter) {
-            StopListeningForChangeEvents(targetList);
-            targetList.Clear();
-
-            foreach (var item in sourceList)
-                targetList.Add(converter(item));
-
-            ListenForChangeEvents(targetList);
-        }
-
-        private bool TargetAndMasterCollectionsAreEqual() =>
-            _masterList.Cast<object>().SequenceEqual(_targetList.Cast<object>().Select(item => ConvertFromTargetToMaster(item)));
-
-        private void UpdateListsFromSource(IList list) {
-            if (ReferenceEquals(list, _masterList))
-                SetListValuesFromSource(_masterList, _targetList, ConvertFromMasterToTarget);
-            else
-                SetListValuesFromSource(_targetList, _masterList, ConvertFromTargetToMaster);
-        }
+        #endregion Static Helpers
 
     }
 }

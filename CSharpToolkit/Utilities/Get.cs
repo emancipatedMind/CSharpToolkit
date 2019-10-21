@@ -37,6 +37,7 @@
         /// Used to get a new guid where the dashes are replaced by underscores.
         /// </summary>
         /// <returns>A new guid where the dashes are replaced by underscores.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static string SafeGuid() =>
             Guid.NewGuid().ToString().Replace("-", "_");
 
@@ -47,6 +48,7 @@
         /// <param name="startIndex">Where to start substring.</param>
         /// <param name="length">Substring length.</param>
         /// <returns>Substring requested.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static string Substring(string input, int startIndex, int length) {
             if (string.IsNullOrEmpty(input))
                 return input;
@@ -62,6 +64,7 @@
         /// </summary>
         /// <param name="fileName">File name to write out to.</param>
         /// <returns>Callback method for writing out to file.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static Action<string> WriteMethod(string fileName) =>
             WriteMethod(new FileInfo(fileName));
 
@@ -70,9 +73,11 @@
         /// </summary>
         /// <param name="file">File to write out to.</param>
         /// <returns>Callback method for writing out to file.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static Action<string> WriteMethod(FileInfo file) =>
             s => { using (var stream = file.AppendText()) stream.Write(s); };
 
+        [System.Diagnostics.DebuggerStepThrough]
         public static OperationResult<DateTime?> BuildDate(this Assembly assembly) =>
             OperationResult<DateTime?>(() => {
                 const int c_PeHeaderOffset = 60;
@@ -100,6 +105,7 @@
         /// <typeparam name="T">List type.</typeparam>
         /// <param name="action">Operation to fill list before returning.</param>
         /// <returns>Returns new list.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static List<T> List<T>(Action<List<T>> action) =>
             General(action);
 
@@ -107,9 +113,10 @@
         /// Gets generic object of type T.
         /// </summary>
         /// <typeparam name="T">object type.</typeparam>
-        /// <param name="action">Operation to perform on object before returning.</param>
+        /// <param name="acton">Operation to perform on object before returning.</param>
         /// <param name="parameters">Parameters to be passed to object of type T for creating.</param>
         /// <returns>Returns new object.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static T General<T>(Action<T> action, object[] parameters = null) {
             var g = (T)Activator.CreateInstance(typeof(T), parameters);
             action(g);
@@ -242,8 +249,9 @@
         /// <param name="columns">A collection of KeyValuePairs that represents the column names with associated value.</param>
         /// <param name="whereCondition">The where condition which denotes the rows to update.</param>
         /// <returns>A data order containing the query, parameters, and aliases.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static IAliasedDataOrder UpdateQuery(string tableName, IEnumerable<KeyValuePair<string, object>> columns, Clause whereCondition) =>
-                UpdateQuery(tableName, columns, whereCondition, new string[0]);
+            UpdateQuery(tableName, columns, whereCondition, new string[0]);
 
         /// <summary>
         /// Creates a simple update query with optional output parameters.
@@ -253,6 +261,7 @@
         /// <param name="whereCondition">The where condition which denotes the rows to update.</param>
         /// <param name="outputParameters">The columns for which output parameters are requested. The output values are aliased. The old values are preceded with DELETED, and the new values are preceded with INSERTED. If the Name column is requested, the old value is aliased as DELETEDName, and the new value is aliased as INSERTEDName.</param>
         /// <returns>A data order containing the query, parameters, and aliases.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static IAliasedDataOrder UpdateQuery(string tableName, IEnumerable<KeyValuePair<string, object>> columns, Clause whereCondition, IEnumerable<string> outputParameters) {
             var outputClauseFunctions = new Func<string, IEnumerable<string>, IAliasedDataOrder>[] {
                 ProduceInsertedOutputClause,
@@ -273,6 +282,7 @@
         /// </summary>
         /// <param name="tableName">The name of the table to be updated.</param>
         /// <returns>A data order containing the query, parameters, and aliases.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static IAliasedDataOrder InsertQuery(string tableName) =>
             InsertQuery(tableName, new KeyValuePair<string, object>[0], new string[0]);
 
@@ -282,6 +292,7 @@
         /// <param name="tableName">The name of the table to be updated.</param>
         /// <param name="columns">A collection of KeyValuePairs that represents the column names with associated value.</param>
         /// <returns>A data order containing the query, parameters, and aliases.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static IAliasedDataOrder InsertQuery(string tableName, IEnumerable<KeyValuePair<string, object>> columns) =>
             InsertQuery(tableName, columns, new string[0]);
 
@@ -291,6 +302,7 @@
         /// <param name="tableName">The name of the table to be updated.</param>
         /// <param name="outputParameters">The columns for which output parameters are requested. The output values are aliased. The column names are preceded with INSERTED. For example, an output of the column Id would be INSERTEDId.</param>
         /// <returns>A data order containing the query, parameters, and aliases.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static IAliasedDataOrder InsertQuery(string tableName, IEnumerable<string> outputParameters) =>
             InsertQuery(tableName, new KeyValuePair<string, object>[0], outputParameters);
 
@@ -301,6 +313,7 @@
         /// <param name="columns">A collection of KeyValuePairs that represents the column names with associated value.</param>
         /// <param name="outputParameters">The columns for which output parameters are requested. The output values are aliased. The column names are preceded with INSERTED. For example, an output of the column Id would be INSERTEDId.</param>
         /// <returns>A data order containing the query, parameters, and aliases.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static IAliasedDataOrder InsertQuery(string tableName, IEnumerable<KeyValuePair<string, object>> columns, IEnumerable<string> outputParameters) {
             var outputClauseFunctions = new Func<string, IEnumerable<string>, IAliasedDataOrder>[] {
                 ProduceInsertedOutputClause
@@ -331,6 +344,7 @@
         /// <param name="tableName">The name of the table to be updated.</param>
         /// <param name="whereCondition">The where condition which denotes the rows to update.</param>
         /// <returns>A data order containing the query, parameters, and aliases.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static IAliasedDataOrder DeleteQuery(string tableName, Clause whereCondition) =>
             DeleteQuery(tableName, whereCondition, new string[0]);
 
@@ -341,6 +355,7 @@
         /// <param name="whereCondition">The where condition which denotes the rows to update.</param>
         /// <param name="outputParameters">The columns for which output parameters are requested. The output values are aliased. The column names are preceded with DELETED. For example, an output of the column Id would be DELETEDId.</param>
         /// <returns>A data order containing the query, parameters, and aliases.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static IAliasedDataOrder DeleteQuery(string tableName, Clause whereCondition, IEnumerable<string> outputParameters) {
             var outputClauseFunctions = new Func<string, IEnumerable<string>, IAliasedDataOrder>[] {
                 ProduceDeletedOutputClause,
@@ -420,6 +435,7 @@
         /// <param name="target">Target of query.</param>
         /// <param name="compoundProperty">Optionally embedded property info to get. If you have an object with a property, just specify that property like so "Name". If property has property, syntax is "Name.Key". Syntax may be repeated until property is discovered.</param>
         /// <returns>Operation result containing propertyinfo, and target object propertyinfo was found on.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static OperationResult<Tuple<object, PropertyInfo>> Property(object target, string compoundProperty) =>
             OperationResult(() => {
                 object originalTarget = target;
@@ -450,6 +466,7 @@
         /// <param name="fieldParameterNameTupleCollection">The collection of Tuples to not be copied, but replaced. Item1 should be the field of the table, and Item2 should be the parameter name of the new value.</param>
         /// <param name="fieldsToCopy">The fields that should be copied verbatim.</param>
         /// <returns>A simple data order containing the parameters from the Clause, and the resultant query. The resultant query outputs the primary key of the inserted record as NewId, and the old Id as OldId.</returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static ISimpleDataOrder RecordCopyQuery(string tableName, string primaryKeyFieldName, Clause tempTableClause, Tuple<string, string>[] fieldParameterNameTupleCollection, string[] fieldsToCopy) {
             string uniqueAppendage = SafeGuid();
             string sourceAlias = "source";
@@ -475,6 +492,7 @@
             return new SimpleDataOrder(query, firstDataOrder.Parameters);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public static OperationResult<MailMessage> MailMessage(string subject, string body, EmailReceipients receipients, MailAddress sender, bool isBodyHtml) {
             var exceptions = new List<Exception>();
             if (receipients == null || receipients.NoReceipientsSpecified)
@@ -500,6 +518,7 @@
         /// An instance of the <see cref="Regex"/> class that will validate emails.
         /// </summary>
         /// <returns></returns>
+        [System.Diagnostics.DebuggerStepThrough]
         public static Regex EmailRegex() =>
                 new Regex(
                     @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"

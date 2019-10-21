@@ -4,7 +4,7 @@
     using Extensions;
 
     public class NameExtensionFormatter : IStringFormatter {
-        public IStringFormatter NameFormatter { get; set; } = new NameFormatter();
+        public IStringFormatter NameFormatter { get; set; } = Formatters.NameFormatter.Instance;
         public string ExtensionPrependage { get; set; } = "x";
 
         public string Format(params string[] text) {

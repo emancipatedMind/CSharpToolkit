@@ -65,7 +65,7 @@
                         else if (value is decimal || value is decimal?)
                             sqlValueType = "DECIMAL";
 
-                        builder.AppendLine($"DECLARE {parameter.Key} {sqlValueType} = {value ?? "NULL" }");
+                        builder.AppendLine($"DECLARE {parameter.Key} {sqlValueType} = {value ?? "NULL" };");
                     }
                 }
                 builder.AppendLine();

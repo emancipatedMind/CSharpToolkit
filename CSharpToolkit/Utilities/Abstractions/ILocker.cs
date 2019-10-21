@@ -4,7 +4,7 @@
     /// <summary>
     /// Implemented by a class who can provide lock status services.
     /// </summary>
-    public interface ILocker : ILockStatusProvider {
+    public interface ILocker : ILockStatusProvider, IDisposable {
         /// <summary>
         /// Used to request a lock.
         /// </summary>

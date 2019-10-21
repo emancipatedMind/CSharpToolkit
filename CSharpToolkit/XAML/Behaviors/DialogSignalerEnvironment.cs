@@ -67,6 +67,10 @@
                     DialogController.Successful -= OnSuccessful;
                     Dialog = null;
                     DialogController = null;
+
+                    DialogClosed = null;
+                    Cancelled = null;
+                    Successful = null;
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

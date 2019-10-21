@@ -7,6 +7,9 @@ namespace CSharpToolkit.XAML.Behaviors {
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Documents;
+    /*
+        On ListView, place behavior SetAutoSort to true, and then on each column header, SetPropertyName to property to sort on. If that particular column cannot sort, just skip it.
+    */
     public class GridViewSort {
         #region Public attached properties
 
