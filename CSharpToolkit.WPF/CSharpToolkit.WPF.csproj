@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CFD1111B-C192-4390-ADC9-97974046B33C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSharpToolkit</RootNamespace>
+    <AssemblyName>CSharpToolkit.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\CSharpToolkit.WPF.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Extensions\CommandExtensions.cs" />
+    <Compile Include="Extensions\LocatorExtensions.cs" />
+    <Compile Include="Extensions\ViewModelExtensions.cs" />
+    <Compile Include="Extensions\WindowFunctions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\Abstractions\IAppStarter.cs" />
+    <Compile Include="Utilities\Abstractions\IFormInteractor.cs" />
+    <Compile Include="Utilities\Abstractions\ILocator.cs" />
+    <Compile Include="Utilities\Abstractions\IOwnerProvider.cs" />
+    <Compile Include="Utilities\Abstractions\IParentInteractor.cs" />
+    <Compile Include="Utilities\Abstractions\IParentViewModel.cs" />
+    <Compile Include="Utilities\Abstractions\ISimpleFindInteractor.cs" />
+    <Compile Include="Utilities\Abstractions\ISimpleInteractor.cs" />
+    <Compile Include="Utilities\Abstractions\IViewModelStateProvider.cs" />
+    <Compile Include="Utilities\Abstractions\IVMLocator.cs" />
+    <Compile Include="Utilities\BeginNewResult.cs" />
+    <Compile Include="Utilities\BeginNewType.cs" />
+    <Compile Include="Utilities\CascadingDeleteType.cs" />
+    <Compile Include="Utilities\ConfirmRecordResult.cs" />
+    <Compile Include="Utilities\ConfirmRecordType.cs" />
+    <Compile Include="Utilities\CriticalOperationType.cs" />
+    <Compile Include="Utilities\DoNotAllowCloseWhenCriticalAttribute.cs" />
+    <Compile Include="Utilities\SearchStatus.cs" />
+    <Compile Include="Utilities\ModificationMode.cs" />
+    <Compile Include="Utilities\ModifyableItemsOnlyLocator.cs" />
+    <Compile Include="Utilities\SortCommandOverrideParameter.cs" />
+    <Compile Include="Utilities\ViewModelState.cs" />
+    <Compile Include="ViewModels\Abstractions\DialogViewModel.cs" />
+    <Compile Include="ViewModels\Abstractions\EditableBase.cs" />
+    <Compile Include="ViewModels\Abstractions\FindViewModel.cs" />
+    <Compile Include="ViewModels\Abstractions\GroupedFindSelectorViewModel.cs" />
+    <Compile Include="ViewModels\Abstractions\ModifyableFindViewModel.cs" />
+    <Compile Include="ViewModels\Abstractions\ModifyableTemplatedFindViewModel.cs" />
+    <Compile Include="ViewModels\Abstractions\ModifyableTemplatedFindViewModelWithInteractor.cs" />
+    <Compile Include="ViewModels\Abstractions\NonSortingModifyableTemplatedFindViewModel.cs" />
+    <Compile Include="ViewModels\Abstractions\NonSortingModifyableTemplatedFindViewModelWithInteractor.cs" />
+    <Compile Include="ViewModels\Abstractions\TemplatedFindViewModel.cs" />
+    <Compile Include="ViewModels\Abstractions\ValidationBase.cs" />
+    <Compile Include="ViewModels\Abstractions\WindowViewModel.cs" />
+    <Compile Include="ViewModels\CheckBoxViewModel.cs" />
+    <Compile Include="ViewModels\ColorLegend.cs" />
+    <Compile Include="ViewModels\IconLegend.cs" />
+    <Compile Include="ViewModels\IsSelectedViewModel.cs" />
+    <Compile Include="ViewModels\LengthLimitedTextViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\ModifyingRecordViewModel.cs" />
+    <Compile Include="ViewModels\NoInfoDialogViewModel.cs" />
+    <Compile Include="ViewModels\PasswordEntryViewModel.cs" />
+    <Compile Include="ViewModels\PasswordUpdateDialogViewModel.cs" />
+    <Compile Include="ViewModels\SingleFieldViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelDialogWrapper.cs" />
+    <Compile Include="Views\ThreeSectionWithMenuContainer.cs" />
+    <Compile Include="Views\TwoSectionWithMenuContainer.cs" />
+    <Compile Include="XAML\Abstractions\IWPFApplicationProxy.cs" />
+    <Compile Include="XAML\Abstractions\IAsyncCommand.cs" />
+    <Compile Include="XAML\Abstractions\IBindablePassword.cs" />
+    <Compile Include="XAML\Abstractions\IDialogControl.cs" />
+    <Compile Include="XAML\Abstractions\IDialogSignaler.cs" />
+    <Compile Include="XAML\Abstractions\IExplicitErrorAdder.cs" />
+    <Compile Include="XAML\Abstractions\IFocusChanger.cs" />
+    <Compile Include="XAML\Abstractions\IListItemConverter.cs" />
+    <Compile Include="XAML\Abstractions\IRaiseCanExecuteChanged.cs" />
+    <Compile Include="XAML\AwaitableDelegateCommand.cs" />
+    <Compile Include="XAML\AwaitableDelegateCommandBase.cs" />
+    <Compile Include="XAML\Behaviors\CallbackListItemConverter.cs" />
+    <Compile Include="XAML\Behaviors\CloseBehavior.cs" />
+    <Compile Include="XAML\Behaviors\ControlBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\DataGridBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\DependencyPropertyBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\DialogSignalerEnvironment.cs" />
+    <Compile Include="XAML\Behaviors\ExplicitErrorAddingBehavior.cs" />
+    <Compile Include="XAML\Behaviors\FrameworkElementBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\GridViewSort.cs" />
+    <Compile Include="XAML\Behaviors\InputKeyRestrictor.cs" />
+    <Compile Include="XAML\Behaviors\PasswordBoxBehavior.cs" />
+    <Compile Include="XAML\Behaviors\SelectorBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\SortGlyphAdorner.cs" />
+    <Compile Include="XAML\Behaviors\TabItemBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\TextBoxBaseBehaviors.cs" />
+    <Compile Include="XAML\Behaviors\TreeViewHelper.cs" />
+    <Compile Include="XAML\Behaviors\TwoListSynchronizer.cs" />
+    <Compile Include="XAML\Behaviors\UIElementBehaviors.cs" />
+    <Compile Include="XAML\BindablePasswordViewModel.cs" />
+    <Compile Include="XAML\BindingProxy.cs" />
+    <Compile Include="XAML\Converters\AlternatingRowColorConverter.cs" />
+    <Compile Include="XAML\Converters\BooleanANDConverter.cs" />
+    <Compile Include="XAML\Converters\BooleanNotConverter.cs" />
+    <Compile Include="XAML\Converters\BooleanORConverter.cs" />
+    <Compile Include="XAML\Converters\ColorToSolidBrushConverter.cs" />
+    <Compile Include="XAML\Converters\DateConverter.cs" />
+    <Compile Include="XAML\Converters\DecimalNumericCoercerConverter.cs" />
+    <Compile Include="XAML\Converters\DisplayConverter.cs" />
+    <Compile Include="XAML\Converters\EnumBooleanConverter.cs" />
+    <Compile Include="XAML\Converters\EnumDescriptionTypeConverter.cs" />
+    <Compile Include="XAML\Converters\FilterConverter.cs" />
+    <Compile Include="XAML\Converters\FormattingMultiConverter.cs" />
+    <Compile Include="XAML\Converters\FormattingSingleConverter.cs" />
+    <Compile Include="XAML\Converters\IsNullConverter.cs" />
+    <Compile Include="XAML\Converters\NullableIntToBool.cs" />
+    <Compile Include="XAML\Converters\NullIfEmptyStringConverter.cs" />
+    <Compile Include="XAML\Converters\NullIfZeroConverter.cs" />
+    <Compile Include="XAML\Converters\NumericCoercerConverter.cs" />
+    <Compile Include="XAML\Converters\SolidBrushToColorConverter.cs" />
+    <Compile Include="XAML\Converters\TimeConverter.cs" />
+    <Compile Include="XAML\Converters\ValuesToBoolConverter.cs" />
+    <Compile Include="XAML\Converters\YearConverter.cs" />
+    <Compile Include="XAML\DelegateCommand.cs" />
+    <Compile Include="XAML\DialogEntityBase.cs" />
+    <Compile Include="XAML\DoubleClickListView.cs" />
+    <Compile Include="XAML\DoubleClickListViewItem.cs" />
+    <Compile Include="XAML\EntityBase.cs" />
+    <Compile Include="XAML\Extensions\XAMLExtensions.cs" />
+    <Compile Include="XAML\ListViewItemWithSlide.cs" />
+    <Compile Include="XAML\ListViewWithSlide.cs" />
+    <Compile Include="XAML\MarkupExtensions\EnumBindingSourceExtension.cs" />
+    <Compile Include="XAML\SingleValueViewModel.cs" />
+    <Compile Include="XAML\TokenTimer.cs" />
+    <Compile Include="XAML\WPFApplicationProxy.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSharpToolkit\CSharpToolkit.csproj">
+      <Project>{d7323cd4-e917-4adf-bbf1-b3593fcdb3ba}</Project>
+      <Name>CSharpToolkit</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Windows\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

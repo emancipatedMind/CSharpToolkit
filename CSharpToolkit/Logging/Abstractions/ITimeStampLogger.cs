@@ -3,6 +3,7 @@
     /// <summary>
     /// Implemented by class who may log time stamps.
     /// </summary>
+    [Obsolete]
     public interface ITimeStampLogger : ILogger {
         /// <summary>
         /// Logs current time.

@@ -1,63 +1,48 @@
 ﻿namespace CSharpToolkit.Logging {
+    using Abstractions;
     using System;
     using System.IO;
-    using Logging.Abstractions;
-    using EventArgs;
+    using Utilities;
     /// <summary>
-    /// Generic logger whose file name may be swapped.
+    /// Logger for logging to files with the ability to swap the file name. Uses dual lock in case of multi-thread logging.
     /// </summary>
     public class Logger : IFileNameSwappableLogger {
 
-        string _fileName;
+        object _firstLockToken = new object();
+        object _secondLockToken = new object();
 
         /// <summary>
-        /// Instantiates Logger. Must pass in FileName to log.
+        /// Instantiates Logger. FileName must be specified before use.
         /// </summary>
         public Logger() : this("") { }
+
         /// <summary>
         /// Instantiates Logger.
         /// </summary>
         /// <param name="logFile">File where logging is done.</param>
         public Logger(string logFile) {
-            _fileName = logFile;
+            FileName = logFile;
         }
 
         /// <summary>
-        /// File name for logging. Changing file name can reset logger faulted status.
+        /// File name for logging.
         /// </summary>
-        public string FileName {
-            set {
-                if (_fileName == value) return; 
-                _fileName = value;
-                LoggerFaulted = false;
-            }
-        }
-
-        /// <summary>
-        /// Raied to indicate logger has failed to output to destination.
-        /// </summary>
-        public event EventHandler<GenericEventArgs<Exception>> LogOutputFailure;
-
-        /// <summary>
-        /// Indicates whether Logger has faulted.
-        /// </summary>
-        public bool LoggerFaulted { get; private set; } = false;
+        public string FileName { get; set; }
 
         /// <summary>
         /// Log Content.
         /// </summary>
         /// <param name="content">Content to be logged.</param>
-        public void Log(string content) {
-            if (LoggerFaulted) return;
-            try {
-                using (var writer = File.AppendText(_fileName))
-                    writer.Write(content);
-            }
-            catch(Exception ex) {
-                LoggerFaulted = true;
-                LogOutputFailure?.Invoke(this, new GenericEventArgs<Exception>(ex));
-            }
-        }
+        /// <returns>Operation result detailing whether log was successful.</returns>
+        public OperationResult Log(object content) =>
+            Get.OperationResult(() => {
+                if (string.IsNullOrWhiteSpace(FileName))
+                    throw new ArgumentNullException("File Name is null. A file name must be provided before logging can begin.");
+                lock(_firstLockToken) 
+                    lock(_secondLockToken) 
+                        using (var writer = File.AppendText(FileName))
+                            writer.Write(content);
+            });
 
     }
 }

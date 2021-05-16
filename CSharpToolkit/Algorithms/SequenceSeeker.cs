@@ -3,7 +3,7 @@
     using System.IO;
     using System.Linq;
     /// <summary>
-    /// Used to seek a sequence of bytes in a stream;
+    /// Used to seek a sequence of bytes in a stream.
     /// </summary>
     public class SequenceSeeker {
 
@@ -15,8 +15,8 @@
         /// Sequence to be matched. Defaulted to CRLF.
         /// </summary>
         public byte[] Sequence {
-            get => _sequenceChecker.Sequence;
-            set => _sequenceChecker.Sequence = value;
+            get { return _sequenceChecker.Sequence; }
+            set { _sequenceChecker.Sequence = value; }
         }
 
         /// <summary>

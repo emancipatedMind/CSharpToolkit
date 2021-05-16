@@ -16,7 +16,5 @@
             foreach (var s in source)
                 action(s);
         }
-        //public static IEnumerable<(T item, int index)> WithIndices<T>(this IEnumerable<T> source) =>
-        //    source.Select((s, i) => (s, i));
     }
 }

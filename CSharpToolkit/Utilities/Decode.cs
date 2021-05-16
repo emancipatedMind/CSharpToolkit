@@ -2,6 +2,9 @@
     using System;
     using System.Runtime.InteropServices;
     using System.Security;
+    /// <summary>
+    /// A utility class used to decode certain data types.
+    /// </summary>
     public static class Decode {
 
         /// <summary>
@@ -24,6 +27,7 @@
         public static OperationResult<string> SecureString(SecureString value) {
             IntPtr valuePtr = IntPtr.Zero;
             try {
+                value = value ?? new SecureString(); 
                 valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
                 string plainSecureString = Marshal.PtrToStringUni(valuePtr);
                 return new OperationResult<string>(plainSecureString);

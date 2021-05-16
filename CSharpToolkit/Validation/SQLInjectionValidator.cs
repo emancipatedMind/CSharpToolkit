@@ -1,35 +1,44 @@
 ﻿namespace CSharpToolkit.Validation {
     using Abstractions;
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.Linq;
+    using System.Text.RegularExpressions;
     using Utilities;
     /// <summary>
-    /// Used to verify that invalid characters do not exist in string collection. Only allows alphanumeric characters,
-    /// and escaped single quotes. If AllowSingleQuotes is true, single quotes are allowed.
+    /// Used to verify that characters hostile to sql queries do not exist in a string. By default,
+    /// allows alphanumeric characters, escaped single quotes, commas, commercial at(@), and periods. If AllowSingleQuotes is true, single quotes are allowed.
     /// </summary>
-    public class SQLInjectionValidator : IValidate<IEnumerable<string>> {
+    public class SQLInjectionValidator : IValidate<string> {
+
+        Regex _validator;
+        Regex _disallowSingleQuotes = new Regex(@"^([a-zA-Z0-9@., ]|(\r)|(\n)|('{2}))*$");
+        Regex _allowSingleQuotes = new Regex(@"^([a-zA-Z0-9'@., ]|(\r)|(\n))*$");
         
-        RegexStringValidator _disallowSingleQuotes = new RegexStringValidator(@"^([a-zA-Z0-9]|('{2}))*$");
-        RegexStringValidator _allowSingleQuotes = new RegexStringValidator(@"^([a-zA-Z0-9'])*$");
-
-        RegexStringValidator _validator;
-
         /// <summary>
-        /// Instantiates SQLInjectionValidator.
+        /// Instantiates SQLInjectionValidator. Used to verify that characters hostile to sql queries do not exist in a string. By default,
+        /// allows alphanumeric characters, escaped single quotes, commas, commercial at(@), and periods. If AllowSingleQuotes is true, single quotes are allowed.
         /// </summary>
         public SQLInjectionValidator() {
-            _validator = _disallowSingleQuotes;
+            AllowSingleQuotes = true;
         } 
 
         /// <summary>
-        /// Validates collection of strings for any invalid characters. 
+        /// Validates string to be sure it does not contain characters known to be hostile to sql queries.
         /// </summary>
-        /// <param name="order">Statements to validate.</param>
+        /// <param name="order">Statement to validate.</param>
         /// <returns>Operation result object.</returns>
-        public OperationResult Validate(IEnumerable<string> order) =>
+        public OperationResult Validate(string order) =>
             Get.OperationResult(() => {
-                order.ToList().ForEach(t => _validator.Validate(t)); 
+                if (string.IsNullOrEmpty(order) || _validator.IsMatch(order)) {
+                    return true;
+                }
+                string message =
+                    "This field can only contain the following: white space, comma, period, a-z, A-Z, 0-9, @, and";
+
+                if (AllowSingleQuotes)
+                    message += " a single quote.";
+                else
+                    message += " a single quote not followed by another single quote.";
+
+                throw new ValidationFailedException(message);
             });
 
         /// <summary>

@@ -1,10 +1,19 @@
 ﻿namespace CSharpToolkit.Console {
     using System;
+    /// <summary>
+    /// A class used to provide some menu options for console.
+    /// </summary>
     public class Menu {
+
+        /// <summary>
+        /// Constructs a menu for use inside of a console.
+        /// </summary>
+        /// <param name="prompt">The menu prompt.</param>
+        /// <param name="options">The menu options text.</param>
+        /// <returns></returns>
         public static int Construct(string prompt, params string[] options) {
 
-            if (options == null || options.Length == 0)
-                throw new InvalidOperationException("The options have not been initialized.");
+            System.Diagnostics.Debug.Assert(options != null && options.Length > 0, "The options have not been initialized.");
 
             int startLeft = 0;
             int startTop = 0;
@@ -26,8 +35,7 @@
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = mainColor;
                 Console.Out.Write($"[{label}] ");
-                if (highlight)
-                {
+                if (highlight) {
                     Console.BackgroundColor = mainColor;
                     Console.ForegroundColor = ConsoleColor.Black;
                 }
@@ -56,7 +64,7 @@
             if (Console.CursorLeft != 0)
                 Console.Out.WriteLine();
 
-            if (!String.IsNullOrEmpty(prompt))
+            if (!string.IsNullOrEmpty(prompt))
             {
                 Console.WriteLine(prompt);
                 Console.WriteLine();
@@ -65,15 +73,13 @@
             startLeft = Console.CursorLeft;
             startTop = Console.CursorTop;
 
-            Boolean choiceMade = false;
+            bool choiceMade = false;
 
-            for (int i = 0; i < options.Length; i++)
-            {
+            for (int i = 0; i < options.Length; i++) {
                 ShowMenuItem(i, options[i], false);
             }
 
-            while (!choiceMade)
-            {
+            while (!choiceMade) {
                 Console.CursorVisible = false;
                 Console.BackgroundColor = originalBackgroundColor;
                 Console.ForegroundColor = originalForegroundColor;
@@ -89,50 +95,44 @@
 
                 Console.CursorVisible = false;
 
-                if (key.Equals(ConsoleKey.DownArrow) && currentIndex < options.Length - 1)
-                {
+                if (key.Equals(ConsoleKey.DownArrow) && currentIndex < options.Length - 1) {
                     currentIndex++;
                     entry = (currentIndex + 1).ToString();
                 }
-                else if (key.Equals(ConsoleKey.UpArrow) && currentIndex > 0)
-                {
+                else if (key.Equals(ConsoleKey.UpArrow) && currentIndex > 0) {
                     currentIndex--;
                     entry = (currentIndex + 1).ToString();
                 }
-                else if (key.Equals(ConsoleKey.Home))
-                {
+                else if (key.Equals(ConsoleKey.Home)) {
                     currentIndex = 0;
                     entry = (currentIndex + 1).ToString();
                 }
-                else if (key.Equals(ConsoleKey.End))
-                {
+                else if (key.Equals(ConsoleKey.End)) {
                     currentIndex = options.Length - 1;
                     entry = (currentIndex + 1).ToString();
                 }
-                else if (key.Equals(ConsoleKey.PageDown))
-                {
+                else if (key.Equals(ConsoleKey.PageDown)) {
                     currentIndex = Math.Min(currentIndex + 10, options.Length - 1);
                     entry = (currentIndex + 1).ToString();
                 }
-                else if (key.Equals(ConsoleKey.PageUp))
-                {
+                else if (key.Equals(ConsoleKey.PageUp)) {
                     currentIndex = Math.Max(currentIndex - 10, 0);
                     entry = (currentIndex + 1).ToString();
                 }
                 else if (key >= ConsoleKey.D0 && key <= ConsoleKey.D9 && entry.Length < options.Length.ToString().Length)
                 {
                     entry = entry + (key - ConsoleKey.D0).ToString();
-                    currentIndex = Int32.Parse(entry) - 1;
+                    currentIndex = int.Parse(entry) - 1;
                 }
                 else if (key >= ConsoleKey.NumPad0 && key <= ConsoleKey.NumPad9 && entry.Length < options.Length.ToString().Length)
                 {
                     entry = entry + (key - ConsoleKey.NumPad0).ToString();
-                    currentIndex = Int32.Parse(entry) - 1;
+                    currentIndex = int.Parse(entry) - 1;
                 }
                 else if (key.Equals(ConsoleKey.Backspace) && entry.Length > 0)
                 {
                     entry = entry.Substring(0, entry.Length - 1);
-                    currentIndex = String.IsNullOrEmpty(entry) ? -1 : Int32.Parse(entry) - 1;
+                    currentIndex = string.IsNullOrEmpty(entry) ? -1 : int.Parse(entry) - 1;
                 }
                 else if (key.Equals(ConsoleKey.Enter))
                 {
@@ -152,5 +152,4 @@
             return result;
         }
     }
-
 }
