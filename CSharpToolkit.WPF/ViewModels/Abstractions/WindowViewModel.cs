@@ -36,7 +36,15 @@
 
             _criticalLocker.LockStatusChanged += PersonalLocker_LockStatusChanged;
             _noncriticalLocker.LockStatusChanged += PersonalLocker_LockStatusChanged;
+
+            PropertyChanged += (s, e) => {
+                if (e.PropertyName == nameof(RunValidationCallback)) {
+                    UseValidationCallback = true;
+                } 
+            }; 
         }
+
+        public bool UseValidationCallback { get; set; }
 
         public ViewModelState State {
             get { return _state; }
@@ -93,6 +101,9 @@
             _criticalLocker.RequestUnlock(token);
         public void RequestNonCriticalUnlock(object token) =>
             _noncriticalLocker.RequestUnlock(token);
+
+        public override string this[string columnName] =>
+            UseValidationCallback ? base[columnName] : "";
 
         protected virtual void OnStateChanged(ViewModelState oldState) {
             switch(State) {

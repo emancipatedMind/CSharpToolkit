@@ -9,7 +9,7 @@
     using Utilities.Abstractions;
     using XAML;
 
-    public abstract class GroupedFindSelectorViewModel<TSource, TGroupedFindInfo, TPart, TPartImplementation> : ValidationBase, IIdProvider, IContainsParts<TPart>
+    public abstract class GroupedFindSelectorViewModel<TSource, TGroupedFindInfo, TPart, TPartImplementation> : EntityBase, IIdProvider, IContainsParts<TPart>
         where TSource : TGroupedFindInfo
         where TGroupedFindInfo : IIdProvider
         where TPart : IIdProvider

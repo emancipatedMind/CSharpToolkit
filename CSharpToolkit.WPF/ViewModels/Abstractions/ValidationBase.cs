@@ -33,7 +33,7 @@
 
         public Func<string, object, List<Tuple<string, OperationResult>>, Task> RunValidationCallback {
             get { return _runValidationCallback ?? DefaultValidationCallback; }
-            set { _runValidationCallback = value; }
+            set { FirePropertyChangedIfDifferent(ref _runValidationCallback, value); }
         }
 
         public override string this[string columnName] {

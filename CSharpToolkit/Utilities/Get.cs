@@ -527,6 +527,16 @@
                 + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$"
             );
 
+        /// <summary>
+        /// An instance of the <see cref="Regex"/> class that will validate URLs.
+        /// </summary>
+        /// <returns></returns>
+        [System.Diagnostics.DebuggerStepThrough]
+        public static Regex URLRegex() =>
+            new Regex(
+                @"^http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$"
+            );
+
         public static string ObjectStringified(object obj) =>
             string.Join("\r\n", Format(obj, 0));
 
@@ -700,7 +710,7 @@
                 return 1;
             else
                 return 0;
-        } 
+        }
 
     }
 }
